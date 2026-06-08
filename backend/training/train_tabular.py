@@ -199,7 +199,7 @@ def main():
         batch_size=BATCH_SIZE, shuffle=False
     )
 
-    from src.models.tabular_model import TabularModel
+    from backend.models.tabular_model import TabularModel
     model = TabularModel(
         num_numerical=num_numerical,
         cat_cardinalities=cat_cardinalities,

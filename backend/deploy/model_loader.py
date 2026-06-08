@@ -10,7 +10,7 @@ _device: str = settings.model_device
 
 
 def _build_model() -> nn.Module:
-    from src.models.tabular_model import TabularModel
+    from backend.models.tabular_model import TabularModel
     num_numerical = 7
     cat_cardinalities = [2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 3, 4, 3, 3, 3, 2]
     model = TabularModel(

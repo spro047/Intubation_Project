@@ -3,8 +3,8 @@ description: >
   Frontend and API developer for the clinical dashboard.
   Use for: Streamlit UI, FastAPI endpoints, LLM prompt
   assembly, visualizations (charts, heatmaps).
-  Handles src/deploy/api.py, src/deploy/frontend.py,
-  src/deploy/llm_assistant.py.
+  Handles backend/deploy/api.py, backend/deploy/frontend.py,
+  backend/deploy/llm_assistant.py.
 mode: subagent
 model: opencode/deepseek-v4-flash-free
 permission:

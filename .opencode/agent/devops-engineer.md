@@ -3,7 +3,7 @@ description: >
   DevOps engineer for containerization, CI/CD, and
   deployment of the multimodal airway prediction system.
   Use for: Dockerfiles, docker-compose, GitHub Actions,
-  monitoring, cloud infra. Handles src/deploy/,
+  monitoring, cloud infra. Handles backend/deploy/,
   .github/workflows/, monitoring/, Dockerfiles.
 mode: subagent
 model: opencode/deepseek-v4-flash-free

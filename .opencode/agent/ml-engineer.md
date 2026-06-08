@@ -3,8 +3,8 @@ description: >
   ML engineer for multimodal difficult airway prediction.
   Use for: building/training models, data preprocessing,
   evaluation, explainability, ablation studies.
-  Handles src/data/, src/models/, src/training/,
-  src/explain/, notebooks/.
+  Handles backend/data/, backend/models/, backend/training/,
+  backend/explain/, notebooks/.
 mode: subagent
 model: opencode/deepseek-v4-flash-free
 permission:

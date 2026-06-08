@@ -14,7 +14,7 @@ from ..auth import get_current_user, require_role
 from ..schemas import PredictionInput, PredictionOut, LLMReportOut
 from ..model_loader import predict_tabular
 from ..llm_assistant import generate_clinical_summary, generate_recommendations
-from src.data.preprocessing import CATEGORICAL_COLS, NUMERICAL_COLS
+from backend.data.preprocessing import CATEGORICAL_COLS, NUMERICAL_COLS
 
 router = APIRouter(prefix="/api/predictions", tags=["predictions"])
 

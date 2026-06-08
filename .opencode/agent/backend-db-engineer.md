@@ -3,7 +3,7 @@ description: >
   Backend and database engineer for data persistence.
   Use for: MongoDB schema design, CRUD APIs, data
   import/export, image storage, migration scripts.
-  Handles src/database/, scripts/.
+  Handles backend/deploy/database.py, scripts/.
 mode: subagent
 model: opencode/deepseek-v4-flash-free
 permission:

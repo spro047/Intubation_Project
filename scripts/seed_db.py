@@ -8,8 +8,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import asyncio
-from src.deploy.database import connect_db, close_db, get_db
-from src.deploy.auth import hash_password
+from backend.deploy.database import connect_db, close_db, get_db
+from backend.deploy.auth import hash_password
 
 
 async def seed():

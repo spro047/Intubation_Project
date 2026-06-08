@@ -19,9 +19,9 @@ jobs:
         with:
           python-version: "3.10"
       - run: pip install black ruff
-      - run: ruff check src/ --ignore E402,F403,F401 --exit-zero
-      - run: black --check src/ --diff || true
+- run: ruff check backend/ --ignore E402,F403,F401 --exit-zero
 
+      - run: black --check backend/ --diff || true
   test-backend:
     runs-on: ubuntu-latest
     services:
@@ -36,9 +36,11 @@ jobs:
           python-version: "3.10"
           cache: "pip"
       - run: pip install -r requirements.txt
-      - run: python -c "from src.deploy.config import settings; print('Config OK')"
-      - run: python -c "from src.deploy.schemas import *; print('Schemas OK')"
-      - run: python -c "from src.deploy.auth import *; print('Auth OK')"
+- run: python -c "from backend.deploy.config import settings; print('Config OK')"
+
+      - run: python -c "from backend.deploy.schemas import *; print('Schemas OK')"
+
+      - run: python -c "from backend.deploy.auth import *; print('Auth OK')"
 
   test-frontend:
     runs-on: ubuntu-latest
@@ -77,7 +79,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: src/deploy/Dockerfile.api
+          file: backend/deploy/Dockerfile.api
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/api:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/api:${{ github.sha }}
 

@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from src.models.tab_encoder import TabEncoder
+from backend.models.tab_encoder import TabEncoder
 
 
 class TabularModel(nn.Module):

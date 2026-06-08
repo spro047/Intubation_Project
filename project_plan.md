@@ -427,7 +427,7 @@ python src/training/evaluate.py --checkpoint checkpoints/best.pt
 python src/deploy/export.py --checkpoint checkpoints/best.pt --output model.onnx
 
 # 6. Run API
-uvicorn src.deploy.api:app --host 0.0.0.0 --port 8000
+uvicorn backend.deploy.api:app --host 0.0.0.0 --port 8000
 
 # 7. Run UI
 streamlit run src/deploy/frontend.py
