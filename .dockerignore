@@ -1,0 +1,15 @@
+.venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.env
+.venv/
+node_modules/
+notebooks/
+PPTS_&_Folders/
+monitoring/
+*.md
+*.xlsx

@@ -1,0 +1,26 @@
+train:
+  batch_size: 16
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  num_epochs: 100
+  patience: 10
+  use_amp: true
+  gradient_accumulation_steps: 2
+
+model:
+  tab_embed_dim: 64
+  tab_output_dim: 128
+  img_output_dim: 128
+  fusion_embed_dim: 256
+  num_heads: 4
+  dropout: 0.3
+  num_classes: 3
+  backbone: resnet50
+
+data:
+  xlsx_path: "dataset.xlsx"
+  image_root: "data/raw"
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1
+  seed: 42
