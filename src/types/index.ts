@@ -32,6 +32,26 @@ export interface PredictionInput {
   mouth_opening?: number;
   smd?: number;
   neck_movement?: number;
+  previous_airway_records?: string;
+  disease_arthritis?: string;
+  disease_diabetes?: string;
+  disease_down_syndrome?: string;
+  breathing_snoring?: string;
+  breathing_sleep_apnea?: string;
+  symptom_voice_changes?: string;
+  symptom_difficulty_swallowing?: string;
+  symptom_cant_lie_flat?: string;
+  injury_swelling?: string;
+  injury_previous_neck_fracture?: string;
+  previous_emergencies_icu?: string;
+  bmi_category?: string;
+  beard?: string;
+  chest_size?: string;
+  neck_structure?: string;
+  tmd_category?: string;
+  jaw_movement?: string;
+  neck_movement_category?: string;
+  tissue_flexibility?: string;
 }
 
 export interface PredictionResult {

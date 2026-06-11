@@ -14,8 +14,9 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 480
 
-    ollama_url: str = "http://localhost:11434/api/generate"
-    llm_model: str = "qvac/medpsy"
+    llm_api_url: str = "https://openrouter.ai/api/v1"
+    llm_api_key: str = ""
+    llm_model: str = "qwen/qwen-2.5-72b-instruct"
     llm_temperature: float = 0.3
     llm_max_tokens: int = 512
 

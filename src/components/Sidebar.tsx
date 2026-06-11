@@ -5,9 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
-  PlusCircle,
   History,
-  BarChart3,
   FileText,
   Settings,
   User,
@@ -16,19 +14,15 @@ import {
   X,
   Stethoscope,
   ChevronLeft,
-  Moon,
-  Sun,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { getUser, logout } from '@/lib/api';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard#assess-form', label: 'New Assessment', icon: PlusCircle },
   { href: '/history', label: 'Patient Records', icon: History },
-  { href: '/dashboard#analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '#', label: 'Reports', icon: FileText },
-  { href: '#', label: 'Settings', icon: Settings },
+  { href: '/reports', label: 'Reports', icon: FileText },
+  { href: '/settings', label: 'Settings', icon: Settings },
   { href: '/about', label: 'About', icon: User },
 ];
 
@@ -37,24 +31,15 @@ export default function Sidebar() {
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dark, setDark] = useState(false);
 
   const user = getUser();
 
   useEffect(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setDark(true);
       document.documentElement.classList.add('dark');
     }
   }, []);
-
-  const toggleDark = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle('dark', next);
-    localStorage.setItem('theme', next ? 'dark' : 'light');
-  };
 
   const handleLogout = () => {
     logout();
@@ -63,6 +48,8 @@ export default function Sidebar() {
 
   const isActive = (href: string) => {
     if (href.startsWith('/dashboard')) return pathname === '/dashboard';
+    if (href.startsWith('/settings')) return pathname === '/settings';
+    if (href.startsWith('/reports')) return pathname === '/reports';
     return pathname === href;
   };
 
@@ -122,15 +109,6 @@ export default function Sidebar() {
       {/* Bottom */}
       {!collapsed && (
         <div className="border-t border-gray-100 dark:border-slate-800 px-4 py-4 space-y-2">
-          {/* Dark mode toggle */}
-          <button
-            onClick={toggleDark}
-            className="flex items-center gap-3 w-full px-3 py-2 text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg transition-smooth"
-          >
-            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            <span>{dark ? 'Light Mode' : 'Dark Mode'}</span>
-          </button>
-
           {user && (
             <div className="flex items-center gap-3 px-3 py-2">
               <div className="h-8 w-8 rounded-full bg-gradient-to-br from-medical-400 to-medical-600 flex items-center justify-center text-white text-sm font-semibold shadow-sm">

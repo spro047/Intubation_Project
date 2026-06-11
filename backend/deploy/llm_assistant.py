@@ -1,25 +1,35 @@
-import requests
-import json
-from typing import Dict, Optional, List
+from openai import OpenAI
+from typing import Dict, Optional
 from .config import settings
 
+_client: Optional[OpenAI] = None
 
-def _call_ollama(prompt: str, system: str = "") -> Optional[str]:
-    full_prompt = f"SYSTEM: {system}\n\nUSER: {prompt}" if system else prompt
-    payload = {
-        "model": settings.llm_model,
-        "prompt": full_prompt,
-        "stream": False,
-        "options": {
-            "temperature": settings.llm_temperature,
-            "num_predict": settings.llm_max_tokens,
-        },
-    }
+
+def _get_client() -> OpenAI:
+    global _client
+    if _client is None:
+        _client = OpenAI(
+            api_key=settings.llm_api_key or "no-key",
+            base_url=settings.llm_api_url,
+        )
+    return _client
+
+
+def _call_llm(prompt: str, system: str = "") -> Optional[str]:
     try:
-        resp = requests.post(settings.ollama_url, json=payload, timeout=30)
-        resp.raise_for_status()
-        return resp.json().get("response", "")
-    except requests.RequestException as e:
+        client = _get_client()
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+        resp = client.chat.completions.create(
+            model=settings.llm_model,
+            messages=messages,
+            temperature=settings.llm_temperature,
+            max_tokens=settings.llm_max_tokens,
+        )
+        return resp.choices[0].message.content.strip()
+    except Exception as e:
         return None
 
 
@@ -63,7 +73,7 @@ Rules:
 - Be direct, clinical, and actionable.
 - Mention the predicted class, confidence, key risk factors, and airway implication."""
     system = "You are a clinical decision support assistant for anesthesiologists. Answer only in short bullet points."
-    return _call_ollama(prompt, system) or (
+    return _call_llm(prompt, system) or (
         f"- Prediction: {prediction} ({confidence:.1%} confidence).\n"
         f"- Key risk factors: Mallampati {patient_data.get('mallampati_score', 'N/A')}, "
         f"TMD {patient_data.get('tmd', 'N/A')} cm, "
@@ -97,7 +107,7 @@ Rules:
 - Include airway plan, backup equipment, staffing, monitoring, and documentation.
 - Tailor every bullet to the {prediction} category."""
     system = "You are a clinical decision support assistant for anesthesiologists. Answer only in short bullet points."
-    return _call_ollama(prompt, system) or (
+    return _call_llm(prompt, system) or (
         "- Prepare appropriate airway equipment based on risk category.\n"
         f"- {'Consider video laryngoscope or awake fiberoptic intubation.' if prediction == 'Difficult' else 'Standard intubation protocol is likely sufficient.'}\n"
         "- Monitor patient closely during induction of anesthesia.\n"

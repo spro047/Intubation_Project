@@ -60,6 +60,26 @@ class PredictionInput(BaseModel):
     mouth_opening: Optional[float] = 40.0
     smd: Optional[float] = 14.0
     neck_movement: Optional[float] = 85.0
+    previous_airway_records: Optional[str] = "No"
+    disease_arthritis: Optional[str] = "No"
+    disease_diabetes: Optional[str] = "No"
+    disease_down_syndrome: Optional[str] = "No"
+    breathing_snoring: Optional[str] = "No"
+    breathing_sleep_apnea: Optional[str] = "No"
+    symptom_voice_changes: Optional[str] = "No"
+    symptom_difficulty_swallowing: Optional[str] = "No"
+    symptom_cant_lie_flat: Optional[str] = "No"
+    injury_swelling: Optional[str] = "No"
+    injury_previous_neck_fracture: Optional[str] = "No"
+    previous_emergencies_icu: Optional[str] = "No"
+    bmi_category: Optional[str] = "Normal"
+    beard: Optional[str] = "No"
+    chest_size: Optional[str] = "Medium"
+    neck_structure: Optional[str] = "Normal"
+    tmd_category: Optional[str] = "Normal"
+    jaw_movement: Optional[str] = "Normal"
+    neck_movement_category: Optional[str] = "Normal"
+    tissue_flexibility: Optional[str] = "Normal"
 
 
 class PredictionOut(BaseModel):

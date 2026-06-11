@@ -15,7 +15,7 @@ class TabularEmbedding(nn.Module):
 
     def forward(self, numerical, categorical_indices):
         x_num = self.numerical_proj(numerical).unsqueeze(1)
-        x_cat = [emb(cat_indices.clamp(min=0)).unsqueeze(1)
+        x_cat = [emb(cat_indices.clamp(0, emb.num_embeddings - 1)).unsqueeze(1)
                  for emb, cat_indices in zip(self.categorical_embeddings, categorical_indices)]
         x = torch.cat([x_num] + x_cat, dim=1)
         x = x + self.pos_encoding[:, :x.size(1)]

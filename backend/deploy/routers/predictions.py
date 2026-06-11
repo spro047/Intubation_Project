@@ -47,7 +47,56 @@ def _prepare_input(data: PredictionInput):
     cat_values = {
         "Gender": 1 if data.gender.lower() == "male" else 0,
         "Mallampati_Score": max(0, min(3, int(data.mallampati_score) - 1)),
+        "Previous_Airway_Records": 1 if str(getattr(data, "previous_airway_records", "no")).lower() in ("yes","y") else 0,
+        "Disease_Arthritis": 1 if str(getattr(data, "disease_arthritis", "no")).lower() in ("yes","y") else 0,
+        "Disease_Diabetes": 1 if str(getattr(data, "disease_diabetes", "no")).lower() in ("yes","y") else 0,
+        "Disease_Down_Syndrome": 1 if str(getattr(data, "disease_down_syndrome", "no")).lower() in ("yes","y") else 0,
+        "Breathing_Snoring": 1 if str(getattr(data, "breathing_snoring", "no")).lower() in ("yes","y") else 0,
+        "Breathing_Sleep_Apnea": 1 if str(getattr(data, "breathing_sleep_apnea", "no")).lower() in ("yes","y") else 0,
+        "Symptom_Voice_Changes": 1 if str(getattr(data, "symptom_voice_changes", "no")).lower() in ("yes","y") else 0,
+        "Symptom_Difficulty_Swallowing": 1 if str(getattr(data, "symptom_difficulty_swallowing", "no")).lower() in ("yes","y") else 0,
+        "Symptom_Cant_Lie_Flat": 1 if str(getattr(data, "symptom_cant_lie_flat", "no")).lower() in ("yes","y") else 0,
+        "Injury_Swelling": 1 if str(getattr(data, "injury_swelling", "no")).lower() in ("yes","y") else 0,
+        "Injury_Previous_Neck_Fracture": 1 if str(getattr(data, "injury_previous_neck_fracture", "no")).lower() in ("yes","y") else 0,
+        "Previous_Emergencies_ICU": 1 if str(getattr(data, "previous_emergencies_icu", "no")).lower() in ("yes","y") else 0,
     }
+    bmi_val = data.bmi or 0
+    if bmi_val < 25:
+        bmi_cat_idx = 0  # Normal
+    elif bmi_val < 30:
+        bmi_cat_idx = 1  # Overweight
+    else:
+        bmi_cat_idx = 2  # Obese
+    cat_values["BMI_Category"] = bmi_cat_idx
+
+    tmd_val = data.tmd or 0
+    if tmd_val >= 6.5:
+        cat_values["TMD_Category"] = 0  # Easy
+    elif tmd_val >= 6.0:
+        cat_values["TMD_Category"] = 1  # Medium
+    else:
+        cat_values["TMD_Category"] = 2  # Difficult
+
+    neck_move_val = data.neck_movement or 0
+    if neck_move_val >= 80:
+        cat_values["Neck_Movement_Category"] = 0  # Normal
+    elif neck_move_val >= 70:
+        cat_values["Neck_Movement_Category"] = 1  # Borderline
+    else:
+        cat_values["Neck_Movement_Category"] = 2  # Risky
+
+    beard_raw = str(getattr(data, "beard", "no")).lower()
+    cat_values["Beard"] = 1 if beard_raw in ("yes","y") else 0
+    chest_raw = str(getattr(data, "chest_size", "medium")).lower()
+    chest_map = {"small": 0, "medium": 0, "large": 1}
+    cat_values["Chest_Size"] = chest_map.get(chest_raw, 0)
+    neck_struct_raw = str(getattr(data, "neck_structure", "normal")).lower()
+    cat_values["Neck_Structure"] = 2 if neck_struct_raw == "abnormal" else 1
+    jaw_raw = str(getattr(data, "jaw_movement", "normal")).lower()
+    jaw_map = {"normal": 0, "reduced": 1}
+    cat_values["Jaw_Movement"] = jaw_map.get(jaw_raw, 0)
+    tissue_raw = str(getattr(data, "tissue_flexibility", "normal")).lower()
+    cat_values["Tissue_Flexibility"] = 1 if tissue_raw == "reduced" else 0
     categorical = []
     for col in CATEGORICAL_COLS:
         val = cat_values.get(col, 0)

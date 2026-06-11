@@ -4,7 +4,8 @@ import { useState, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Stethoscope, Eye, EyeOff, AlertCircle, LogIn } from 'lucide-react';
 import clsx from 'clsx';
-import { login, getToken } from '@/lib/api';
+import { login, getToken, clearToken } from '@/lib/api';
+import { BASE_URL } from '@/lib/api';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,11 +15,24 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Redirect if already authenticated
+  // Redirect only if token is valid; clear stale tokens
   useEffect(() => {
-    if (getToken()) {
-      router.replace('/dashboard');
-    }
+    const token = getToken();
+    if (!token) return;
+    (async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          router.replace('/dashboard');
+        } else {
+          clearToken();
+        }
+      } catch {
+        clearToken();
+      }
+    })();
   }, [router]);
 
   const handleSubmit = async (e: FormEvent) => {

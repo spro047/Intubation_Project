@@ -1,18 +1,4 @@
 services:
-  mongo:
-    image: mongo:7
-    ports:
-      - "27017:27017"
-    volumes:
-      - D:/mongodb/data:/data/db
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    restart: unless-stopped
-
   api:
     build:
       context: .
@@ -20,16 +6,14 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - MONGO_URL=mongodb://mongo:27017
-      - MONGO_DB=airway_db
+      - MONGO_URL=${MONGO_URL}
+      - MONGO_DB=${MONGO_DB}
       - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
-      - OLLAMA_URL=http://llm:11434/api/generate
-      - LLM_MODEL=${LLM_MODEL:-qvac/medpsy}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_API_URL=${LLM_API_URL:-https://api.groq.com/openai/v1}
+      - LLM_MODEL=${LLM_MODEL:-llama3-70b-8192}
       - MODEL_CHECKPOINT=checkpoints/tabular_best.pt
       - MODEL_DEVICE=cpu
-    depends_on:
-      mongo:
-        condition: service_healthy
     restart: unless-stopped
 
   frontend:
@@ -42,18 +26,4 @@ services:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
     depends_on:
       - api
-    restart: unless-stopped
-
-  llm:
-    image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
-    volumes:
-      - D:/ollama/models:/root/.ollama
-    healthcheck:
-      test: ollama list || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 120s
     restart: unless-stopped

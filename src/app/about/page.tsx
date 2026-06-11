@@ -50,9 +50,9 @@ const mlModels = [
 ];
 
 const llmInfo = {
-  provider: 'Ollama',
-  model: 'qvac/medpsy',
-  endpoint: 'http://localhost:11434/api/generate',
+  provider: 'OpenRouter (API)',
+  model: 'Qwen 2.5 72B Instruct (via OpenRouter)',
+  endpoint: 'https://openrouter.ai/api/v1',
   temperature: 0.3,
   maxTokens: 512,
   purpose:
@@ -62,9 +62,9 @@ const llmInfo = {
 const architecture = [
   { layer: 'Frontend', tech: 'Next.js 14, Tailwind CSS, Recharts', icon: Layers },
   { layer: 'Backend', tech: 'FastAPI, Motor (async MongoDB)', icon: Database },
-  { layer: 'ML Engine', tech: 'PyTorch, scikit-learn, XGBoost', icon: Brain },
-  { layer: 'LLM Service', tech: 'Ollama + qvac/medpsy', icon: Sparkles },
-  { layer: 'Database', tech: 'MongoDB (Motor async driver)', icon: Cpu },
+  { layer: 'ML Engine', tech: 'PyTorch TabTransformer (tabular_best.pt)', icon: Brain },
+  { layer: 'LLM Service', tech: 'OpenRouter API + Qwen 2.5 72B', icon: Sparkles },
+  { layer: 'Database', tech: 'MongoDB Atlas (cloud)', icon: Cpu },
 ];
 
 export default function AboutPage() {

@@ -39,9 +39,9 @@ export default function RiskPredictionCard({
           </p>
           <div className="flex items-baseline gap-1">
             <span className="text-4xl font-bold text-gray-900 dark:text-slate-100 tabular-nums">
-              {riskScore.toFixed(2)}
+              {(riskScore * 100).toFixed(0)}%
             </span>
-            <span className="text-sm text-gray-400 dark:text-slate-500 font-medium">/ 1.00</span>
+            <span className="text-sm text-gray-400 dark:text-slate-500 font-medium">risk score</span>
           </div>
         </div>
 
