@@ -1,9 +1,7 @@
 services:
   - type: web
     name: airway-api
-    runtime: docker
-    repo: https://github.com/spro047/Intubation_Project
-    branch: main
+    env: docker
     dockerfilePath: ./backend/deploy/Dockerfile.api
     healthCheckPath: /health
     envVars:
@@ -26,13 +24,11 @@ services:
 
   - type: web
     name: airway-frontend
-    runtime: docker
-    repo: https://github.com/spro047/Intubation_Project
-    branch: main
+    env: docker
     dockerfilePath: ./Dockerfile.frontend
     envVars:
       - key: NEXT_PUBLIC_API_URL
         fromService:
           name: airway-api
           type: web
-          property: hostOrIP
+          property: host
