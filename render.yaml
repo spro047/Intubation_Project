@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: airway-api
+    runtime: docker
+    repo: https://github.com/spro047/Intubation_Project
+    branch: main
+    dockerfilePath: ./backend/deploy/Dockerfile.api
+    healthCheckPath: /health
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: MONGO_DB
+        value: airway_db
+      - key: JWT_SECRET
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_API_URL
+        value: https://openrouter.ai/api/v1
+      - key: LLM_MODEL
+        value: qwen/qwen-2.5-72b-instruct
+      - key: MODEL_CHECKPOINT
+        value: checkpoints/tabular_best.pt
+      - key: MODEL_DEVICE
+        value: cpu
+
+  - type: web
+    name: airway-frontend
+    runtime: docker
+    repo: https://github.com/spro047/Intubation_Project
+    branch: main
+    dockerfilePath: ./Dockerfile.frontend
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          name: airway-api
+          type: web
+          property: hostOrIP
