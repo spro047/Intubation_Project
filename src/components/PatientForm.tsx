@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { Activity, User, Stethoscope, ClipboardList, AlertCircle, Info, FlaskConical, Shuffle } from 'lucide-react';
 import type { PredictionInput } from '@/types';
 import clsx from 'clsx';
@@ -8,32 +8,41 @@ import clsx from 'clsx';
 interface PatientFormProps {
   onSubmit: (data: PredictionInput) => void;
   loading: boolean;
+  initialData?: PredictionInput | null;
 }
 
 interface FormErrors {
   [key: string]: string;
 }
 
-export default function PatientForm({ onSubmit, loading }: PatientFormProps) {
-  const [formData, setFormData] = useState<PredictionInput>({
-    patient_id: '',
-    age: 0,
-    gender: '',
-    bmi: 0,
-    mallampati_score: 0,
-    tmd: 0,
-    neck_circumference: 0,
-    mouth_opening: 40,
-    smd: 14,
-    neck_movement: 85,
-    beard: 'No',
-    chest_size: 'Medium',
-    neck_structure: 'Normal',
-    jaw_movement: 'Normal',
-    tissue_flexibility: 'Normal',
-  });
+const defaultFormData: PredictionInput = {
+  patient_id: '',
+  age: 0,
+  gender: '',
+  bmi: 0,
+  mallampati_score: 0,
+  tmd: 0,
+  neck_circumference: 0,
+  mouth_opening: 40,
+  smd: 14,
+  neck_movement: 85,
+  beard: 'No',
+  chest_size: 'Medium',
+  neck_structure: 'Normal',
+  jaw_movement: 'Normal',
+  tissue_flexibility: 'Normal',
+};
+
+export default function PatientForm({ onSubmit, loading, initialData }: PatientFormProps) {
+  const [formData, setFormData] = useState<PredictionInput>(defaultFormData);
   const [errors, setErrors] = useState<FormErrors>({});
   const [activeSection, setActiveSection] = useState('demographics');
+
+  useEffect(() => {
+    setFormData(initialData ? { ...initialData } : { ...defaultFormData });
+    setErrors({});
+    setActiveSection('demographics');
+  }, [initialData]);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -80,13 +89,13 @@ export default function PatientForm({ onSubmit, loading }: PatientFormProps) {
 
   const inputClass = (field: string) =>
     clsx(
-      'w-full px-3 py-2.5 text-sm border rounded-lg transition-smooth focus:outline-none focus:ring-2 bg-white dark:bg-slate-800',
+      'w-full px-3 py-2.5 text-sm border rounded-lg transition-smooth focus:outline-none focus:ring-2 bg-white dark:bg-claude-800',
       errors[field]
         ? 'border-danger-300 focus:ring-danger-200 dark:border-danger-600'
-        : 'border-gray-200 dark:border-slate-700 focus:ring-medical-200 focus:border-medical-400 dark:focus:border-medical-500 hover:border-gray-300 dark:hover:border-slate-600'
+        : 'border-gray-200 dark:border-claude-600 focus:ring-medical-300 focus:border-medical-400 dark:focus:border-medical-400 hover:border-gray-300 dark:hover:border-claude-500'
     );
 
-  const labelClass = 'block text-sm font-medium text-gray-600 dark:text-slate-400 mb-1.5';
+  const labelClass = 'block text-sm font-medium text-gray-600 dark:text-claude-300 mb-1.5';
   const sectionTab = (id: string, label: string, icon: React.ElementType) => {
     const Icon = icon;
     return (
@@ -96,8 +105,8 @@ export default function PatientForm({ onSubmit, loading }: PatientFormProps) {
         className={clsx(
           'flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-smooth border',
           activeSection === id
-            ? 'bg-medical-50 dark:bg-medical-900/30 text-medical-700 dark:text-medical-400 border-medical-200 dark:border-medical-800'
-            : 'text-gray-500 dark:text-slate-400 border-transparent hover:bg-gray-50 dark:hover:bg-slate-800'
+            ? 'bg-medical-50 dark:bg-medical-950/40 text-medical-700 dark:text-medical-400 border-medical-200 dark:border-medical-800'
+            : 'text-gray-500 dark:text-claude-300 border-transparent hover:bg-gray-50 dark:hover:bg-claude-800'
         )}
       >
         <Icon className="h-4 w-4" />
@@ -147,16 +156,16 @@ export default function PatientForm({ onSubmit, loading }: PatientFormProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm card-gradient animate-fade-in">
+    <div className="bg-white dark:bg-claude-900 rounded-xl border border-gray-200 dark:border-claude-600 shadow-sm card-gradient animate-fade-in">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800">
+      <div className="px-5 py-4 border-b border-gray-100 dark:border-claude-700">
         <div className="flex items-center gap-3 mb-3">
-          <div className="h-8 w-8 rounded-lg bg-medical-50 dark:bg-medical-900/30 flex items-center justify-center">
+          <div className="h-8 w-8 rounded-lg bg-medical-50 dark:bg-medical-950/30 flex items-center justify-center">
             <Activity className="h-4 w-4 text-medical-600 dark:text-medical-400" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-gray-800 dark:text-slate-100">Patient Assessment</h2>
-            <p className="text-xs text-gray-400 dark:text-slate-500">Enter patient data for airway risk evaluation</p>
+            <h2 className="text-base font-semibold text-gray-800 dark:text-claude-50">Patient Assessment</h2>
+            <p className="text-xs text-gray-400 dark:text-claude-400">Enter patient data for airway risk evaluation</p>
           </div>
         </div>
         {/* Quick-fill test case buttons */}
@@ -236,7 +245,7 @@ export default function PatientForm({ onSubmit, loading }: PatientFormProps) {
                   onChange={(e) => handleChange('patient_id', e.target.value)}
                   className={inputClass('patient_id')}
                 />
-                <Info className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300 dark:text-slate-600" />
+                <Info className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300 dark:text-claude-500" />
               </div>
               {errors.patient_id && <p className="mt-1 text-xs text-danger-500 flex items-center gap-1"><AlertCircle className="h-3 w-3" />{errors.patient_id}</p>}
             </div>
@@ -291,7 +300,7 @@ export default function PatientForm({ onSubmit, loading }: PatientFormProps) {
               <div>
                 <label htmlFor="tmd" className={labelClass}>
                   Thyromental Distance (cm) <span className="text-danger-500">*</span>
-                  <span className="text-gray-400 dark:text-slate-500 font-normal ml-1">(TMD)</span>
+                  <span className="text-gray-400 dark:text-claude-400 font-normal ml-1">(TMD)</span>
                 </label>
                 <input id="tmd" type="number" min={3} max={12} step={0.1} placeholder="e.g. 6.5"
                   value={formData.tmd || ''} onChange={(e) => handleChange('tmd', e.target.value)}
@@ -339,8 +348,8 @@ export default function PatientForm({ onSubmit, loading }: PatientFormProps) {
               </div>
             </div>
 
-            <div className="border-t border-gray-100 dark:border-slate-700 pt-4">
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-3">Additional Exam Findings</h3>
+            <div className="border-t border-gray-100 dark:border-claude-600 pt-4">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-claude-200 mb-3">Additional Exam Findings</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {yesNoSelect('beard', 'Beard')}
                 <div>
@@ -399,7 +408,7 @@ export default function PatientForm({ onSubmit, loading }: PatientFormProps) {
             className={clsx(
               'w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold text-white transition-smooth shadow-sm',
               loading
-                ? 'bg-medical-400 cursor-not-allowed'
+                ? 'bg-medical-300 cursor-not-allowed'
                 : 'bg-gradient-to-r from-medical-600 to-medical-500 hover:from-medical-700 hover:to-medical-600 hover:shadow-md active:scale-[0.98]'
             )}
           >

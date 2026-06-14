@@ -15,10 +15,13 @@ interface PatientHistoryProps {
   onDelete?: (id: string) => Promise<void> | void;
   onSelect?: (pred: PredictionHistoryType) => void;
   selectedId?: string | null;
+  filter?: 'all' | 'easy' | 'moderate' | 'difficult';
+  onFilterChange?: (filter: 'all' | 'easy' | 'moderate' | 'difficult') => void;
 }
 
 export default function PatientHistory({
   predictions, loading, onDelete, onSelect, selectedId,
+  filter = 'all', onFilterChange,
 }: PatientHistoryProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [exporting, setExporting] = useState(false);
@@ -37,10 +40,16 @@ export default function PatientHistory({
   };
 
   const filtered = useMemo(() => {
-    if (!searchTerm.trim()) return predictions;
-    const term = searchTerm.toLowerCase();
-    return predictions.filter((p) => p.patient_id.toLowerCase().includes(term));
-  }, [predictions, searchTerm]);
+    let result = predictions;
+    if (filter !== 'all') {
+      result = result.filter(p => p.prediction.toLowerCase() === filter);
+    }
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter((p) => p.patient_id.toLowerCase().includes(term));
+    }
+    return result;
+  }, [predictions, searchTerm, filter]);
 
   const handleExport = async () => {
     setExporting(true);
@@ -74,7 +83,7 @@ export default function PatientHistory({
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700 p-5">
+      <div className="bg-white dark:bg-claude-900 rounded-xl border border-gray-200 dark:border-claude-600 p-5">
         <div className="skeleton h-6 w-48 mb-4" />
         <div className="skeleton h-10 w-full mb-4" />
         {[1, 2, 3, 4].map((i) => <div key={i} className="skeleton h-12 w-full mb-2" />)}
@@ -83,26 +92,58 @@ export default function PatientHistory({
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm animate-fade-in">
+    <div className="bg-white dark:bg-claude-900 rounded-xl border border-gray-200 dark:border-claude-600 shadow-sm animate-fade-in">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="px-5 py-4 border-b border-gray-100 dark:border-claude-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-medical-50 dark:bg-medical-900/30 flex items-center justify-center">
+          <div className="h-8 w-8 rounded-lg bg-medical-50 dark:bg-medical-950/30 flex items-center justify-center">
             <History className="h-4 w-4 text-medical-600 dark:text-medical-400" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-gray-800 dark:text-slate-100">Patient History</h2>
-            <p className="text-xs text-gray-400 dark:text-slate-500">{filtered.length} record{filtered.length !== 1 ? 's' : ''}</p>
+            <h2 className="text-base font-semibold text-gray-800 dark:text-claude-50">Patient History</h2>
+            <p className="text-xs text-gray-400 dark:text-claude-400">{filtered.length} record{filtered.length !== 1 ? 's' : ''}</p>
           </div>
         </div>
         <button onClick={handleExport} disabled={exporting || predictions.length === 0}
           className={clsx('flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-smooth border',
             exporting || predictions.length === 0
-              ? 'bg-gray-50 dark:bg-slate-800 text-gray-400 border-gray-200 dark:border-slate-700 cursor-not-allowed'
-              : 'bg-medical-50 dark:bg-medical-900/30 text-medical-700 dark:text-medical-400 border-medical-200 dark:border-medical-800 hover:bg-medical-100 dark:hover:bg-medical-900/50')}>
+              ? 'bg-gray-50 dark:bg-claude-800 text-gray-400 border-gray-200 dark:border-claude-600 cursor-not-allowed'
+              : 'bg-medical-50 dark:bg-medical-950/30 text-medical-700 dark:text-medical-400 border-medical-200 dark:border-medical-800 hover:bg-medical-100 dark:hover:bg-medical-950/50')}>
           <Download className="h-4 w-4" />
           {exporting ? 'Exporting...' : 'Export CSV'}
         </button>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="mx-5 mb-4 flex gap-1 p-1 bg-gray-50 dark:bg-claude-800 rounded-lg">
+        {[
+          { value: 'all', label: 'All', count: predictions.length },
+          { value: 'easy', label: 'Easy', count: predictions.filter(p => p.prediction.toLowerCase() === 'easy').length },
+          { value: 'moderate', label: 'Moderate', count: predictions.filter(p => p.prediction.toLowerCase() === 'moderate').length },
+          { value: 'difficult', label: 'Difficult', count: predictions.filter(p => p.prediction.toLowerCase() === 'difficult').length },
+        ].map((tab) => (
+          <button
+            key={tab.value}
+            onClick={() => onFilterChange?.(tab.value as 'all' | 'easy' | 'moderate' | 'difficult')}
+            className={clsx(
+              'flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-smooth',
+              filter === tab.value
+                ? 'bg-white dark:bg-claude-900 text-gray-800 dark:text-claude-50 shadow-sm'
+                : 'text-gray-500 dark:text-claude-300 hover:text-gray-700 dark:hover:text-claude-100'
+            )}
+            disabled={tab.count === 0 && tab.value !== 'all'}
+          >
+            <span>{tab.label}</span>
+            <span className={clsx(
+              'px-1.5 py-0.5 text-[10px] font-semibold rounded-full',
+              filter === tab.value
+                ? 'bg-gray-200 dark:bg-claude-700 text-gray-700 dark:text-claude-200'
+                : 'bg-transparent text-gray-400 dark:text-claude-400'
+            )}>
+              {tab.count}
+            </span>
+          </button>
+        ))}
       </div>
 
       {exportError || actionError ? (
@@ -117,16 +158,16 @@ export default function PatientHistory({
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input type="text" placeholder="Search by Patient ID..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-200 dark:focus:ring-medical-800 focus:border-medical-400 bg-white dark:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 transition-smooth" />
+            className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 dark:border-claude-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-medical-300 dark:focus:ring-medical-800 focus:border-medical-400 bg-white dark:bg-claude-800 hover:border-gray-300 dark:hover:border-claude-500 transition-smooth" />
         </div>
 
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
-            <Clock className="h-10 w-10 text-gray-300 dark:text-slate-600 mb-3" />
-            <p className="text-sm text-gray-400 dark:text-slate-500 font-medium">
+            <Clock className="h-10 w-10 text-gray-300 dark:text-claude-500 mb-3" />
+            <p className="text-sm text-gray-400 dark:text-claude-400 font-medium">
               {searchTerm ? 'No records match your search' : 'No assessment history yet'}
             </p>
-            <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">
+            <p className="text-xs text-gray-400 dark:text-claude-400 mt-1">
               {searchTerm ? 'Try a different patient ID' : 'Run an assessment to see results'}
             </p>
           </div>
@@ -134,15 +175,15 @@ export default function PatientHistory({
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-slate-800">
-                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider pb-3 pr-3">Patient ID</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider pb-3 pr-3">Date</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider pb-3 pr-3">Result</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider pb-3 pr-3">Confidence</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider pb-3">Actions</th>
+                <tr className="border-b border-gray-100 dark:border-claude-700">
+                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-claude-300 uppercase tracking-wider pb-3 pr-3">Patient ID</th>
+                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-claude-300 uppercase tracking-wider pb-3 pr-3">Date</th>
+                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-claude-300 uppercase tracking-wider pb-3 pr-3">Result</th>
+                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-claude-300 uppercase tracking-wider pb-3 pr-3">Confidence</th>
+                  <th className="text-left text-xs font-semibold text-gray-500 dark:text-claude-300 uppercase tracking-wider pb-3">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
+              <tbody className="divide-y divide-gray-50 dark:divide-claude-800">
                 {filtered.map((pred) => {
                   const b = badge(pred.prediction);
                   return (
@@ -150,20 +191,20 @@ export default function PatientHistory({
                       onClick={() => onSelect?.(pred)}
                       className={clsx('transition-smooth cursor-pointer',
                         selectedId === pred.id
-                          ? 'bg-medical-50 dark:bg-medical-900/20 ring-1 ring-inset ring-medical-200 dark:ring-medical-800'
-                          : 'hover:bg-gray-50/50 dark:hover:bg-slate-800/50')}>
-                      <td className="py-3 pr-3"><span className="text-sm font-medium text-gray-800 dark:text-slate-200">{pred.patient_id}</span></td>
-                      <td className="py-3 pr-3"><span className="text-sm text-gray-500 dark:text-slate-400">{formatDate(pred.created_at)}</span></td>
+                           ? 'bg-medical-50 dark:bg-medical-950/30 ring-1 ring-inset ring-medical-200 dark:ring-claude-600'
+                          : 'hover:bg-gray-50/50 dark:hover:bg-claude-800/50')}>
+                      <td className="py-3 pr-3"><span className="text-sm font-medium text-gray-800 dark:text-claude-50">{pred.patient_id}</span></td>
+                      <td className="py-3 pr-3"><span className="text-sm text-gray-500 dark:text-claude-300">{formatDate(pred.created_at)}</span></td>
                       <td className="py-3 pr-3">
                         <span className={clsx('inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold', b.bg, b.text)}>
                           <span className={clsx('h-1.5 w-1.5 rounded-full', b.dot)} />
                           {pred.prediction}
                         </span>
                       </td>
-                      <td className="py-3 pr-3"><span className="text-sm font-medium text-gray-700 dark:text-slate-300 tabular-nums">{(pred.confidence * 100).toFixed(1)}%</span></td>
+                      <td className="py-3 pr-3"><span className="text-sm font-medium text-gray-700 dark:text-claude-200 tabular-nums">{(pred.confidence * 100).toFixed(1)}%</span></td>
                       <td className="py-3">
                         <div className="flex items-center gap-1">
-                          <button className="h-7 w-7 rounded-md text-gray-400 hover:text-medical-600 hover:bg-medical-50 dark:hover:bg-medical-900/20 transition-smooth flex items-center justify-center" title="View"><Eye className="h-3.5 w-3.5" /></button>
+                          <button className="h-7 w-7 rounded-md text-gray-400 hover:text-medical-600 hover:bg-medical-50 dark:hover:bg-medical-950/20 transition-smooth flex items-center justify-center" title="View"><Eye className="h-3.5 w-3.5" /></button>
                           {onDelete && (
                             <button onClick={(e) => { e.stopPropagation(); handleDelete(pred.id, pred.patient_id); }} disabled={deletingId === pred.id}
                               className="h-7 w-7 rounded-md text-gray-400 hover:text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-900/20 transition-smooth flex items-center justify-center disabled:opacity-50" title="Delete">

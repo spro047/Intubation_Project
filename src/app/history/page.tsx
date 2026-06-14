@@ -47,12 +47,12 @@ export default function HistoryPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-claude-950">
       <Sidebar />
 
       <div className="lg:pl-80 transition-all duration-300">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 shadow-sm">
+        <header className="bg-white dark:bg-claude-900 border-b border-gray-200 dark:border-claude-700 shadow-sm">
           <div className="px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="lg:hidden w-10" />
@@ -60,22 +60,22 @@ export default function HistoryPage() {
                 <div className="flex items-center gap-3">
                   <Link
                     href="/dashboard"
-                    className="h-8 w-8 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-smooth"
+                      className="h-8 w-8 rounded-lg bg-gray-50 dark:bg-claude-800 border border-gray-200 dark:border-claude-600 flex items-center justify-center text-gray-500 dark:text-claude-300 hover:text-gray-700 dark:hover:text-claude-50 hover:bg-gray-100 dark:hover:bg-claude-700 transition-smooth"
                   >
                     <ArrowLeft className="h-4 w-4" />
                   </Link>
                   <div>
-                    <h1 className="text-lg font-semibold text-gray-800">
+                    <h1 className="text-lg font-semibold text-gray-800 dark:text-claude-50">
                       Prediction History
                     </h1>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-400 dark:text-claude-400">
                       View all previous airway assessments
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-medical-400 to-medical-600 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-medical-400 to-medical-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
               {user.username.charAt(0).toUpperCase()}
             </div>
           </div>

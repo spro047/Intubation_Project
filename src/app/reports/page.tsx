@@ -52,17 +52,17 @@ export default function ReportsPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#f5f0eb] dark:bg-[#0c0a09]">
+    <div className="min-h-screen bg-gray-50 dark:bg-claude-950">
       <Sidebar />
       <div className="lg:pl-64 transition-all duration-300">
-        <header className="bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <header className="bg-white dark:bg-claude-900 border-b border-gray-200 dark:border-claude-700 shadow-sm">
           <div className="px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-claude-50 dark:bg-claude-900/30 flex items-center justify-center">
-              <FileText className="h-4 w-4 text-claude-600 dark:text-claude-400" />
+              <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-claude-800 flex items-center justify-center">
+                <FileText className="h-4 w-4 text-gray-500 dark:text-claude-200" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-gray-800 dark:text-zinc-100">Clinical Reports</h1>
-              <p className="text-xs text-gray-400 dark:text-zinc-500 capitalize">{user.role} · {user.username}</p>
+              <h1 className="text-lg font-semibold text-gray-800 dark:text-claude-50">Clinical Reports</h1>
+              <p className="text-xs text-gray-400 dark:text-claude-400 capitalize">{user.role} · {user.username}</p>
             </div>
           </div>
         </header>
@@ -70,13 +70,13 @@ export default function ReportsPage() {
         <main className="p-4 sm:p-6 lg:p-8 space-y-4">
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="animate-spin h-8 w-8 border-4 border-claude-500 border-t-transparent rounded-full" />
+              <div className="animate-spin h-8 w-8 border-4 border-claude-600 border-t-transparent rounded-full" />
             </div>
           ) : predictions.length === 0 ? (
-            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-700 p-10 text-center">
-              <FileText className="h-12 w-12 text-gray-300 dark:text-zinc-600 mx-auto mb-3" />
-              <p className="text-sm font-medium text-gray-500 dark:text-zinc-400">No reports yet</p>
-              <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">Run an assessment to generate a clinical report</p>
+            <div className="bg-white dark:bg-claude-900 rounded-xl border border-gray-200 dark:border-claude-600 p-10 text-center">
+              <FileText className="h-12 w-12 text-gray-300 dark:text-claude-500 mx-auto mb-3" />
+              <p className="text-sm font-medium text-gray-500 dark:text-claude-300">No reports yet</p>
+              <p className="text-xs text-gray-400 dark:text-claude-400 mt-1">Run an assessment to generate a clinical report</p>
             </div>
           ) : (
             predictions.map((pred) => {
@@ -84,10 +84,10 @@ export default function ReportsPage() {
               const report = reports[pred.id];
               const probEntries = Object.entries(pred.probabilities || {});
               return (
-                <div key={pred.id} className="bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-700 shadow-sm overflow-hidden">
+                <div key={pred.id} className="bg-white dark:bg-claude-900 rounded-xl border border-gray-200 dark:border-claude-600 shadow-sm overflow-hidden">
                   <button
                     onClick={() => toggleExpand(pred)}
-                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-smooth text-left"
+                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-claude-800/50 transition-smooth text-left"
                   >
                     <div className="flex items-center gap-4">
                       <div className={clsx(
@@ -105,7 +105,7 @@ export default function ReportsPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-gray-800 dark:text-zinc-100">{pred.patient_id}</span>
+                          <span className="text-sm font-semibold text-gray-800 dark:text-claude-50">{pred.patient_id}</span>
                           <span className={clsx(
                             'text-[10px] font-semibold px-2 py-0.5 rounded-full',
                             pred.prediction === 'Easy' ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
@@ -116,11 +116,11 @@ export default function ReportsPage() {
                           </span>
                         </div>
                         <div className="flex items-center gap-3 mt-0.5">
-                          <span className="text-xs text-gray-400 dark:text-zinc-500 flex items-center gap-1">
+                          <span className="text-xs text-gray-400 dark:text-claude-400 flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {new Date(pred.created_at).toLocaleDateString()}
                           </span>
-                          <span className="text-xs text-gray-400 dark:text-zinc-500">
+                          <span className="text-xs text-gray-400 dark:text-claude-400">
                             {(pred.confidence * 100).toFixed(0)}% confidence
                           </span>
                         </div>
@@ -130,10 +130,10 @@ export default function ReportsPage() {
                   </button>
 
                   {isOpen && (
-                    <div className="border-t border-gray-100 dark:border-zinc-800 px-5 py-4 space-y-4 animate-fade-in">
+                    <div className="border-t border-gray-100 dark:border-claude-700 px-5 py-4 space-y-4 animate-fade-in">
                       {/* Probabilities */}
                       <div>
-                        <h4 className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <h4 className="text-xs font-semibold text-gray-500 dark:text-claude-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                           <Activity className="h-3 w-3" /> Probabilities
                         </h4>
                         <div className="flex gap-3">
@@ -164,17 +164,17 @@ export default function ReportsPage() {
                       {/* LLM Report */}
                       {loadingReport === pred.id ? (
                         <div className="flex items-center gap-2 py-4 text-sm text-gray-400">
-                          <div className="animate-spin h-4 w-4 border-2 border-claude-500 border-t-transparent rounded-full" />
+                          <div className="animate-spin h-4 w-4 border-2 border-claude-600 border-t-transparent rounded-full" />
                           Loading AI report...
                         </div>
                       ) : report ? (
                         <>
                           <div>
-                            <h4 className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                              <h4 className="text-xs font-semibold text-gray-500 dark:text-claude-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                               <Brain className="h-3 w-3" /> Clinical Summary
                             </h4>
-                            <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
-                              <div className="text-sm text-gray-700 dark:text-zinc-300 space-y-1">
+                            <div className="bg-medical-50 dark:bg-medical-950/20 border border-medical-200 dark:border-medical-800 rounded-lg p-4">
+                              <div className="text-sm text-gray-700 dark:text-claude-200 space-y-1">
                                 {report.summary ? (
                                   report.summary.split('\n').filter((l) => l.trim()).map((line, i) => (
                                     <p key={i}>{line}</p>
@@ -186,11 +186,11 @@ export default function ReportsPage() {
                             </div>
                           </div>
                           <div>
-                            <h4 className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                              <h4 className="text-xs font-semibold text-gray-500 dark:text-claude-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                               <Sparkles className="h-3 w-3" /> Recommendations
                             </h4>
-                            <div className="bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg p-4">
-                              <div className="text-sm text-gray-700 dark:text-zinc-300 space-y-1">
+                            <div className="bg-gray-100 dark:bg-claude-800 border border-gray-200 dark:border-claude-600 rounded-lg p-4">
+                              <div className="text-sm text-gray-700 dark:text-claude-200 space-y-1">
                                 {report.recommendations ? (
                                   report.recommendations.split('\n').filter((l) => l.trim()).map((line, i) => (
                                     <p key={i}>{line}</p>

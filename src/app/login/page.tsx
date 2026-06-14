@@ -62,17 +62,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-medical-50 via-white to-medical-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-medical-100/50 blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-medical-100/40 blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-medical-200/30 blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-md">
         {/* Brand header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-medical-500 to-medical-700 shadow-lg shadow-medical-200 mb-4">
+          <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-medical-400 to-medical-600 shadow-lg shadow-medical-300/40 mb-4">
             <Stethoscope className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-gray-800">Airway MD</h1>
@@ -142,7 +142,7 @@ export default function LoginPage() {
                     'w-full px-4 py-2.5 pr-11 text-sm border rounded-xl transition-smooth focus:outline-none focus:ring-2',
                     error
                       ? 'border-danger-300 focus:ring-danger-200'
-                      : 'border-gray-200 focus:ring-medical-200 focus:border-medical-400 hover:border-gray-300'
+                    : 'border-gray-200 focus:ring-medical-300 focus:border-medical-400 hover:border-gray-300'
                   )}
                   autoComplete="current-password"
                 />
@@ -176,7 +176,7 @@ export default function LoginPage() {
               className={clsx(
                 'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-smooth shadow-sm',
                 loading
-                  ? 'bg-medical-400 cursor-not-allowed'
+                  ? 'bg-medical-300 cursor-not-allowed'
                   : 'bg-gradient-to-r from-medical-600 to-medical-500 hover:from-medical-700 hover:to-medical-600 hover:shadow-md active:scale-[0.98]'
               )}
             >

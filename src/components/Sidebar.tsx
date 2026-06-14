@@ -54,19 +54,19 @@ export default function Sidebar() {
   };
 
   const sidebarContent = (
-    <div className="flex h-full flex-col bg-white dark:bg-slate-900">
+    <div className="flex h-full flex-col bg-white dark:bg-claude-900">
       {/* Brand */}
-      <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100 dark:border-slate-800">
+      <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100 dark:border-claude-700">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-medical-500 to-medical-700 flex items-center justify-center shadow-sm">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-medical-400 to-medical-600 flex items-center justify-center shadow-sm">
             <Stethoscope className="h-5 w-5 text-white" />
           </div>
           {!collapsed && (
             <div>
-              <h1 className="text-lg font-bold text-gray-800 dark:text-slate-100 leading-tight">
+                <h1 className="text-lg font-bold text-gray-800 dark:text-claude-50 leading-tight">
                 Airway MD
               </h1>
-              <p className="text-[10px] text-gray-400 dark:text-slate-500 font-medium tracking-wide uppercase">
+                <p className="text-[10px] text-gray-400 dark:text-claude-400 font-medium tracking-wide uppercase">
                 Clinical Assessment
               </p>
             </div>
@@ -75,7 +75,7 @@ export default function Sidebar() {
         {!collapsed && (
           <button
             onClick={() => setCollapsed(true)}
-            className="hidden lg:flex h-6 w-6 items-center justify-center rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-smooth"
+            className="hidden lg:flex h-6 w-6 items-center justify-center rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-claude-200 hover:bg-gray-100 dark:hover:bg-claude-800 transition-smooth"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -96,10 +96,10 @@ export default function Sidebar() {
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth',
                 active
                   ? 'bg-medical-50 text-medical-700 dark:bg-medical-900/30 dark:text-medical-400 shadow-sm border border-medical-100 dark:border-medical-800'
-                  : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800 border border-transparent'
+                  : 'text-gray-500 dark:text-claude-300 hover:text-gray-700 dark:hover:text-claude-50 hover:bg-gray-50 dark:hover:bg-claude-800 border border-transparent'
               )}
             >
-              <Icon className={clsx('h-5 w-5 flex-shrink-0', active ? 'text-medical-600 dark:text-medical-400' : 'text-gray-400 dark:text-slate-500')} />
+              <Icon className={clsx('h-5 w-5 flex-shrink-0', active ? 'text-medical-600 dark:text-medical-400' : 'text-gray-400 dark:text-claude-400')} />
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
@@ -108,21 +108,21 @@ export default function Sidebar() {
 
       {/* Bottom */}
       {!collapsed && (
-        <div className="border-t border-gray-100 dark:border-slate-800 px-4 py-4 space-y-2">
+        <div className="border-t border-gray-100 dark:border-claude-700 px-4 py-4 space-y-2">
           {user && (
             <div className="flex items-center gap-3 px-3 py-2">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-medical-400 to-medical-600 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-medical-400 to-medical-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
                 {user.username.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-700 dark:text-slate-200 truncate">{user.username}</p>
-                <p className="text-xs text-gray-400 dark:text-slate-500 capitalize">{user.role}</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-claude-100 truncate">{user.username}</p>
+                <p className="text-xs text-gray-400 dark:text-claude-400 capitalize">{user.role}</p>
               </div>
             </div>
           )}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2 text-sm text-gray-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-smooth"
+            className="flex items-center gap-3 w-full px-3 py-2 text-sm text-gray-500 dark:text-claude-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-smooth"
           >
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
@@ -136,17 +136,17 @@ export default function Sidebar() {
     <>
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden h-10 w-10 rounded-xl bg-white dark:bg-slate-900 shadow-md border border-gray-200 dark:border-slate-700 flex items-center justify-center text-gray-600 dark:text-slate-300 hover:text-gray-800 transition-smooth"
+        className="fixed top-4 left-4 z-50 lg:hidden h-10 w-10 rounded-xl bg-white dark:bg-claude-900 shadow-md border border-gray-200 dark:border-claude-600 flex items-center justify-center text-gray-600 dark:text-claude-200 hover:text-gray-800 transition-smooth"
       >
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
       {mobileOpen && (
         <div className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm lg:hidden" onClick={() => setMobileOpen(false)} />
       )}
-      <aside className={clsx('fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-slate-900 shadow-xl border-r border-gray-200 dark:border-slate-800 transform transition-transform duration-300 ease-in-out lg:hidden', mobileOpen ? 'translate-x-0' : '-translate-x-full')}>
+      <aside className={clsx('fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-claude-900 shadow-xl border-r border-gray-200 dark:border-claude-700 transform transition-transform duration-300 ease-in-out lg:hidden', mobileOpen ? 'translate-x-0' : '-translate-x-full')}>
         {sidebarContent}
       </aside>
-      <aside className={clsx('hidden lg:flex flex-col fixed inset-y-0 left-0 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 shadow-sm transition-all duration-300 ease-in-out z-30', collapsed ? 'w-16' : 'w-64')}>
+      <aside className={clsx('hidden lg:flex flex-col fixed inset-y-0 left-0 bg-white dark:bg-claude-900 border-r border-gray-200 dark:border-claude-700 shadow-sm transition-all duration-300 ease-in-out z-30', collapsed ? 'w-16' : 'w-64')}>
         {sidebarContent}
       </aside>
     </>

@@ -30,6 +30,9 @@ Thumbs.db
 .env
 .env.local
 
+# Docker Desktop
+DockerDesktopWSL/
+
 # Logs
 *.log
 logs/
