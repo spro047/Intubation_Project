@@ -85,28 +85,28 @@ export default function AboutPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-claude-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
       <Sidebar />
 
-      <div className="lg:pl-80 transition-all duration-300">
+      <div className="lg:pl-64 transition-all duration-300">
         {/* Top bar */}
-        <header className="bg-white dark:bg-claude-900 border-b border-gray-200 dark:border-claude-700 shadow-sm">
+        <header className="bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-700 shadow-sm">
           <div className="px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push('/dashboard')}
-                className="h-8 w-8 rounded-lg bg-gray-50 dark:bg-claude-800 border border-gray-200 dark:border-claude-600 flex items-center justify-center text-gray-500 dark:text-claude-300 hover:text-gray-700 dark:hover:text-claude-50 hover:bg-gray-100 dark:hover:bg-claude-700 transition-smooth"
+                className="h-8 w-8 rounded-lg bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-600 flex items-center justify-center text-gray-500 dark:text-neutral-300 hover:text-gray-700 dark:hover:text-neutral-50 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-smooth"
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
               <div>
-                <h1 className="text-lg font-semibold text-gray-800 dark:text-claude-50">About</h1>
-                <p className="text-xs text-gray-400 dark:text-claude-400">
+                <h1 className="text-lg font-semibold text-gray-800 dark:text-neutral-50">About</h1>
+                <p className="text-xs text-gray-400 dark:text-neutral-400">
                   System architecture & model information
                 </p>
               </div>
             </div>
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-medical-400 to-medical-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
               {user.username.charAt(0).toUpperCase()}
             </div>
           </div>
@@ -116,14 +116,14 @@ export default function AboutPage() {
           {/* ML Models Section */}
           <section>
             <div className="flex items-center gap-3 mb-5">
-              <div className="h-8 w-8 rounded-lg bg-medical-50 dark:bg-medical-950/30 flex items-center justify-center">
-                <Brain className="h-4 w-4 text-medical-600 dark:text-medical-400" />
+              <div className="h-8 w-8 rounded-lg bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
+                <Brain className="h-4 w-4 text-brand-600 dark:text-brand-400" />
               </div>
               <div>
-                  <h2 className="text-base font-semibold text-gray-800 dark:text-claude-50">
+                  <h2 className="text-base font-semibold text-gray-800 dark:text-neutral-50">
                   Machine Learning Models
                 </h2>
-                <p className="text-xs text-gray-400 dark:text-claude-400">
+                <p className="text-xs text-gray-400 dark:text-neutral-400">
                   Three-class classification: Easy / Moderate / Difficult
                 </p>
               </div>
@@ -133,22 +133,22 @@ export default function AboutPage() {
               {mlModels.map((model) => (
                 <div
                   key={model.name}
-                  className="bg-white dark:bg-claude-900 rounded-xl shadow-sm border border-gray-200 dark:border-claude-600 p-5 card-gradient hover:shadow-md transition-smooth"
+                  className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-600 p-5 card-gradient hover:shadow-md transition-smooth"
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-bold text-gray-800 dark:text-claude-50">
+                    <h3 className="text-sm font-bold text-gray-800 dark:text-neutral-50">
                       {model.name}
                     </h3>
-                    <span className="text-[10px] font-medium text-gray-400 dark:text-claude-300 uppercase tracking-wider bg-gray-100 dark:bg-claude-800 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-medium text-gray-400 dark:text-neutral-300 uppercase tracking-wider bg-gray-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full">
                       {model.type.split(' ')[0]}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-claude-300 mb-4">{model.type}</p>
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 mb-4">{model.type}</p>
 
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500 dark:text-claude-300">Accuracy</span>
-                      <span className="text-sm font-bold text-medical-600 dark:text-medical-400">
+                      <span className="text-xs text-gray-500 dark:text-neutral-300">Accuracy</span>
+                      <span className="text-sm font-bold text-brand-600 dark:text-brand-400">
                         {model.accuracy}
                       </span>
                     </div>
@@ -160,13 +160,13 @@ export default function AboutPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">Features</span>
-                      <span className="text-xs font-medium text-gray-700 dark:text-claude-200 text-right">
+                      <span className="text-xs font-medium text-gray-700 dark:text-neutral-200 text-right">
                         {model.params}
                       </span>
                     </div>
                   </div>
 
-                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-claude-700 text-[10px] text-gray-400 dark:text-claude-400 font-mono">
+                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-neutral-700 text-[10px] text-gray-400 dark:text-neutral-400 font-mono">
                     {model.file}
                   </div>
                 </div>
@@ -177,49 +177,49 @@ export default function AboutPage() {
           {/* LLM Section */}
           <section>
             <div className="flex items-center gap-3 mb-5">
-              <div className="h-8 w-8 rounded-lg bg-medical-50 dark:bg-medical-950/30 flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-medical-600 dark:text-medical-400" />
+              <div className="h-8 w-8 rounded-lg bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
+                <Sparkles className="h-4 w-4 text-brand-600 dark:text-brand-400" />
               </div>
               <div>
-                  <h2 className="text-base font-semibold text-gray-800 dark:text-claude-50">
+                  <h2 className="text-base font-semibold text-gray-800 dark:text-neutral-50">
                   LLM Assistant
                 </h2>
-                <p className="text-xs text-gray-400 dark:text-claude-400">
+                <p className="text-xs text-gray-400 dark:text-neutral-400">
                   AI-powered clinical decision support
                 </p>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-claude-900 rounded-xl shadow-sm border border-gray-200 dark:border-claude-600 p-5 card-gradient">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-600 p-5 card-gradient">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-xs text-gray-400 dark:text-claude-300 mb-1">Provider</p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-claude-50">
+                  <p className="text-xs text-gray-400 dark:text-neutral-300 mb-1">Provider</p>
+                  <p className="text-sm font-semibold text-gray-800 dark:text-neutral-50">
                     {llmInfo.provider}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400 dark:text-claude-300 mb-1">Model</p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-claude-50 font-mono">
+                  <p className="text-xs text-gray-400 dark:text-neutral-300 mb-1">Model</p>
+                  <p className="text-sm font-semibold text-gray-800 dark:text-neutral-50 font-mono">
                     {llmInfo.model}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400 dark:text-claude-300 mb-1">Temperature</p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-claude-50">
+                  <p className="text-xs text-gray-400 dark:text-neutral-300 mb-1">Temperature</p>
+                  <p className="text-sm font-semibold text-gray-800 dark:text-neutral-50">
                     {llmInfo.temperature}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400 dark:text-claude-300 mb-1">Max Tokens</p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-claude-50">
+                  <p className="text-xs text-gray-400 dark:text-neutral-300 mb-1">Max Tokens</p>
+                  <p className="text-sm font-semibold text-gray-800 dark:text-neutral-50">
                     {llmInfo.maxTokens}
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-claude-700">
-                <p className="text-xs text-gray-400 dark:text-claude-300 mb-1">Purpose</p>
-                <p className="text-sm text-gray-700 dark:text-claude-200">{llmInfo.purpose}</p>
+              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-neutral-700">
+                <p className="text-xs text-gray-400 dark:text-neutral-300 mb-1">Purpose</p>
+                <p className="text-sm text-gray-700 dark:text-neutral-200">{llmInfo.purpose}</p>
               </div>
             </div>
           </section>
@@ -231,16 +231,16 @@ export default function AboutPage() {
                 <Layers className="h-4 w-4 text-gray-600" />
               </div>
               <div>
-                  <h2 className="text-base font-semibold text-gray-800 dark:text-claude-50">
+                  <h2 className="text-base font-semibold text-gray-800 dark:text-neutral-50">
                   System Architecture
                 </h2>
-                <p className="text-xs text-gray-400 dark:text-claude-400">
+                <p className="text-xs text-gray-400 dark:text-neutral-400">
                   End-to-end technology stack
                 </p>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-claude-900 rounded-xl shadow-sm border border-gray-200 dark:border-claude-600 divide-y divide-gray-100 dark:divide-claude-700">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-600 divide-y divide-gray-100 dark:divide-neutral-700">
               {architecture.map((layer, i) => {
                 const Icon = layer.icon;
                 return (
@@ -252,11 +252,11 @@ export default function AboutPage() {
                       className={clsx(
                         'h-8 w-8 rounded-lg flex items-center justify-center',
                         i === 0
-                           ? 'bg-medical-50 text-medical-600 dark:bg-medical-950/30 dark:text-medical-400'
+                           ? 'bg-brand-50 text-brand-600 dark:bg-brand-950/30 dark:text-brand-400'
                            : i === 1
                            ? 'bg-green-50 text-green-600'
                            : i === 2
-                           ? 'bg-medical-50 text-medical-600 dark:bg-medical-950/30 dark:text-medical-400'
+                           ? 'bg-brand-50 text-brand-600 dark:bg-brand-950/30 dark:text-brand-400'
                           : i === 3
                           ? 'bg-amber-50 text-amber-600'
                           : 'bg-blue-50 text-blue-600'
@@ -265,10 +265,10 @@ export default function AboutPage() {
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 dark:text-claude-50">
+                      <p className="text-sm font-medium text-gray-800 dark:text-neutral-50">
                         {layer.layer}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-claude-300">{layer.tech}</p>
+                      <p className="text-xs text-gray-500 dark:text-neutral-300">{layer.tech}</p>
                     </div>
                   </div>
                 );

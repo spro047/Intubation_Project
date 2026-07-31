@@ -19,76 +19,94 @@ export default function RiskPredictionCard({
 
   const colorClasses =
     p === 'easy'
-      ? { border: 'border-success-500', bg: 'bg-success-50 dark:bg-success-900/20', text: 'text-success-700 dark:text-success-400', badge: 'bg-success-500', label: 'Easy Airway' }
+      ? { strip: 'bg-success-500', label: 'Easy Airway', labelColor: 'text-success-700 dark:text-success-400', badgeBg: 'bg-success-50 dark:bg-success-900/20', badgeBorder: 'border-success-200 dark:border-success-800' }
       : p === 'moderate'
-      ? { border: 'border-warning-500', bg: 'bg-warning-50 dark:bg-warning-900/20', text: 'text-warning-700 dark:text-warning-400', badge: 'bg-warning-500', label: 'Moderate Airway' }
+      ? { strip: 'bg-warning-500', label: 'Moderate Airway', labelColor: 'text-warning-700 dark:text-warning-400', badgeBg: 'bg-warning-50 dark:bg-warning-900/20', badgeBorder: 'border-warning-200 dark:border-warning-800' }
       : p === 'difficult'
-      ? { border: 'border-danger-500', bg: 'bg-danger-50 dark:bg-danger-900/20', text: 'text-danger-700 dark:text-danger-400', badge: 'bg-danger-500', label: 'Difficult Airway' }
-      : { border: 'border-gray-300', bg: 'bg-gray-50 dark:bg-claude-800', text: 'text-gray-500', badge: 'bg-gray-400', label: 'Unknown' };
+      ? { strip: 'bg-danger-500', label: 'Difficult Airway', labelColor: 'text-danger-700 dark:text-danger-400', badgeBg: 'bg-danger-50 dark:bg-danger-900/20', badgeBorder: 'border-danger-200 dark:border-danger-800' }
+      : { strip: 'bg-neutral-400', label: 'Unknown', labelColor: 'text-neutral-500', badgeBg: 'bg-neutral-50 dark:bg-neutral-800', badgeBorder: 'border-neutral-200 dark:border-neutral-700' };
+
+  const order = ['Easy', 'Moderate', 'Difficult'];
 
   return (
-    <div className="bg-white dark:bg-claude-900 rounded-xl border border-gray-200 dark:border-claude-600 shadow-sm overflow-hidden animate-fade-in">
-      {/* Color strip */}
-      <div className={clsx('h-1.5 w-full', colorClasses.badge)} />
+    <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden animate-scale-in">
+      <div className={clsx('h-2 w-full', colorClasses.strip)} />
 
-      <div className="p-5 space-y-5">
-        {/* Risk Score */}
-        <div>
-          <p className="text-xs font-medium text-gray-500 dark:text-claude-300 uppercase tracking-wider mb-1">
-            Airway Risk Assessment
+      <div className="p-6 space-y-6">
+        {/* Hero risk score */}
+        <div className="text-center">
+          <p className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-[0.15em] mb-2">
+            Airway Risk Score
           </p>
-          <div className="flex items-baseline gap-1">
-            <span className="text-4xl font-bold text-gray-900 dark:text-claude-50 tabular-nums">
-              {(riskScore * 100).toFixed(0)}%
-            </span>
-            <span className="text-sm text-gray-400 dark:text-claude-400 font-medium">risk score</span>
+          <div className="font-display text-7xl font-bold text-neutral-900 dark:text-neutral-50 leading-none tabular-nums tracking-tight animate-count-up">
+            {(riskScore * 100).toFixed(0)}
+            <span className="text-3xl font-display text-neutral-400 dark:text-neutral-500 align-top ml-0.5">%</span>
           </div>
         </div>
 
-        {/* Prediction badge */}
-        <div className={clsx('rounded-lg border-2 p-4', colorClasses.border, colorClasses.bg)}>
-          <p className="text-xs font-medium text-gray-500 dark:text-claude-300 uppercase tracking-wider mb-1">
-            Prediction
-          </p>
-          <p className={clsx('text-xl font-bold', colorClasses.text)}>
-            {colorClasses.label.toUpperCase()}
+        {/* Prediction label */}
+        <div className={clsx('rounded-lg border-2 px-4 py-3 text-center', colorClasses.badgeBg, colorClasses.badgeBorder)}>
+          <p className={clsx('text-base font-bold tracking-wide', colorClasses.labelColor)}>
+            {colorClasses.label}
           </p>
         </div>
 
         {/* Confidence bar */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-medium text-gray-500 dark:text-claude-300">Confidence</span>
-            <span className="text-sm font-bold text-gray-800 dark:text-claude-100 tabular-nums">
+            <span className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
+              Confidence
+            </span>
+            <span className="text-sm font-semibold text-neutral-700 dark:text-neutral-200 tabular-nums font-mono">
               {(confidence * 100).toFixed(1)}%
             </span>
           </div>
-          <div className="h-2.5 bg-gray-100 dark:bg-claude-800 rounded-full overflow-hidden">
+          <div className="h-2 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
             <div
-              className={clsx('h-full rounded-full transition-all duration-700', colorClasses.badge)}
+              className={clsx('h-full rounded-full transition-all duration-700 ease-out', colorClasses.strip)}
               style={{ width: `${Math.min(100, confidence * 100)}%` }}
             />
           </div>
         </div>
 
-        {/* Probability breakdown */}
-        <div className="pt-3 border-t border-gray-100 dark:border-claude-700 space-y-2">
-          {['Easy', 'Moderate', 'Difficult'].map((key) => {
-            const val = probabilities?.[key] ?? 0;
-            const barColor =
-              key === 'Easy' ? 'bg-success-500' : key === 'Moderate' ? 'bg-warning-500' : 'bg-danger-500';
-            return (
-              <div key={key} className="flex items-center gap-2">
-                <span className="text-xs font-medium text-gray-600 dark:text-claude-300 w-16">{key}</span>
-                <div className="flex-1 h-2 bg-gray-100 dark:bg-claude-800 rounded-full overflow-hidden">
-                  <div className={clsx('h-full rounded-full', barColor)} style={{ width: `${Math.min(100, val * 100)}%` }} />
+        {/* Stacked probability bar */}
+        <div className="space-y-2">
+          <p className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
+            Probability Distribution
+          </p>
+          {/* Segmented bar */}
+          <div className="h-3 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden flex">
+            {order.map((key) => {
+              const val = probabilities?.[key] ?? 0;
+              const barColor =
+                key === 'Easy' ? 'bg-success-500' : key === 'Moderate' ? 'bg-warning-500' : 'bg-danger-500';
+              const widthPct = Math.max(1, Math.min(100, val * 100));
+              return (
+                <div
+                  key={key}
+                  className={clsx('h-full first:rounded-l-full last:rounded-r-full transition-all duration-700 ease-out', barColor)}
+                  style={{ width: `${widthPct}%` }}
+                />
+              );
+            })}
+          </div>
+          {/* Legend */}
+          <div className="flex justify-between">
+            {order.map((key) => {
+              const val = probabilities?.[key] ?? 0;
+              const dotColor =
+                key === 'Easy' ? 'bg-success-500' : key === 'Moderate' ? 'bg-warning-500' : 'bg-danger-500';
+              return (
+                <div key={key} className="flex items-center gap-1.5">
+                  <span className={clsx('h-2 w-2 rounded-full', dotColor)} />
+                  <span className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">{key}</span>
+                  <span className="text-[10px] font-semibold text-neutral-700 dark:text-neutral-200 tabular-nums font-mono">
+                    {(val * 100).toFixed(1)}%
+                  </span>
                 </div>
-                <span className="text-xs font-semibold text-gray-700 dark:text-claude-200 w-11 text-right tabular-nums">
-                  {(val * 100).toFixed(1)}%
-                </span>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

@@ -36,3 +36,6 @@ DockerDesktopWSL/
 # Logs
 *.log
 logs/
+
+# Tool cache
+.understand-anything/

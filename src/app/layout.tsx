@@ -1,10 +1,29 @@
 import type { Metadata } from 'next';
+import { Playfair_Display, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'Airway Assessment Dashboard',
+  title: 'Airway MD — Airway Risk Assessment',
   description:
-    'Multimodal difficult airway prediction system — clinical decision support tool for anesthesiologists.',
+    'Clinical decision support tool for difficult airway prediction. Built for anesthesiologists.',
 };
 
 export default function RootLayout({
@@ -13,8 +32,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-gray-50 dark:bg-claude-950 font-sans">{children}</body>
+    <html lang="en" className={`${playfair.variable} ${inter.variable} ${jetbrains.variable}`}>
+      <body className="min-h-screen bg-neutral-50 dark:bg-neutral-950 font-body antialiased">
+        {children}
+      </body>
     </html>
   );
 }

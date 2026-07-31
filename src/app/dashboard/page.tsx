@@ -106,35 +106,35 @@ export default function DashboardPage() {
   function FormStatusBar({ patient, onEdit, onNew }: { patient: PredictionInput; onEdit: () => void; onNew: () => void }) {
     const bmiCat = patient.bmi < 25 ? 'Normal' : patient.bmi < 30 ? 'Overweight' : 'Obese';
     return (
-      <div className="bg-white dark:bg-claude-900 rounded-xl border border-gray-200 dark:border-claude-600 shadow-sm animate-fade-in">
+      <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-600 shadow-sm animate-fade-in">
         <div className="px-5 py-4 flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg bg-medical-50 dark:bg-medical-950/30 flex items-center justify-center">
-              <User className="h-5 w-5 text-medical-600 dark:text-medical-400" />
+            <div className="h-10 w-10 rounded-lg bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
+              <User className="h-5 w-5 text-brand-600 dark:text-brand-400" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-gray-800 dark:text-claude-50">{patient.patient_id}</span>
-                <span className="text-[10px] font-medium text-gray-400 dark:text-claude-400 bg-gray-100 dark:bg-claude-800 px-2 py-0.5 rounded-full">{patient.gender}</span>
+                <span className="text-sm font-semibold text-gray-800 dark:text-neutral-50">{patient.patient_id}</span>
+                <span className="text-[10px] font-medium text-gray-400 dark:text-neutral-400 bg-gray-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full">{patient.gender}</span>
               </div>
-              <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-500 dark:text-claude-300">
+              <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-500 dark:text-neutral-300">
                 <span>{patient.age}y</span>
-                <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-claude-600" />
+                <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-neutral-600" />
                 <span>BMI {patient.bmi}</span>
-                <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-claude-600" />
+                <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-neutral-600" />
                 <span>Mallampati {patient.mallampati_score}</span>
-                <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-claude-600" />
+                <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-neutral-600" />
                 <span>TMD {patient.tmd}cm</span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={onNew}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-medical-700 dark:text-medical-400 bg-medical-50 dark:bg-medical-950/30 border border-medical-200 dark:border-medical-800 rounded-lg hover:bg-medical-100 dark:hover:bg-medical-950/50 transition-smooth">
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-brand-700 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/30 border border-brand-200 dark:border-brand-800 rounded-lg hover:bg-brand-100 dark:hover:bg-brand-950/50 transition-smooth">
               <Plus className="h-3.5 w-3.5" /> New
             </button>
             <button onClick={onEdit}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-claude-300 bg-gray-50 dark:bg-claude-800 border border-gray-200 dark:border-claude-600 rounded-lg hover:bg-gray-100 dark:hover:bg-claude-700 transition-smooth">
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-neutral-300 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-600 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 transition-smooth">
               <Edit3 className="h-3.5 w-3.5" /> Edit
             </button>
           </div>
@@ -152,20 +152,20 @@ export default function DashboardPage() {
   const activePredictionLabel = selectedPrediction ? selectedPrediction.prediction : predictionResult?.prediction.prediction ?? null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-claude-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
       <Sidebar />
 
       <div className="lg:pl-64 transition-all duration-300">
         {/* Top Bar */}
-        <header className="bg-white dark:bg-claude-900 border-b border-gray-200 dark:border-claude-700 shadow-sm">
+        <header className="bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-700 shadow-sm">
           <div className="px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="lg:hidden w-10" />
               <div>
-                <h1 className="text-lg font-semibold text-gray-800 dark:text-claude-50">
+                <h1 className="text-lg font-semibold text-gray-800 dark:text-neutral-50">
                   Airway Assessment
                 </h1>
-                <p className="text-xs text-gray-400 dark:text-claude-400 capitalize">
+                <p className="text-xs text-gray-400 dark:text-neutral-400 capitalize">
                   {user.role} · {user.username}
                 </p>
               </div>
@@ -173,17 +173,17 @@ export default function DashboardPage() {
             <div className="flex items-center gap-3">
               <button
                 onClick={toggleTheme}
-                className="h-9 w-9 rounded-lg bg-gray-50 dark:bg-claude-800 border border-gray-200 dark:border-claude-600 flex items-center justify-center text-gray-500 dark:text-claude-300 hover:text-gray-700 dark:hover:text-claude-50 hover:bg-gray-100 dark:hover:bg-claude-700 transition-smooth"
+                className="h-9 w-9 rounded-lg bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-600 flex items-center justify-center text-gray-500 dark:text-neutral-300 hover:text-gray-700 dark:hover:text-neutral-50 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-smooth"
                 aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
               >
                 {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </button>
               <button onClick={handleLogout}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 dark:text-claude-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-smooth border border-transparent hover:border-red-200 dark:hover:border-red-800">
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 dark:text-neutral-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-smooth border border-transparent hover:border-red-200 dark:hover:border-red-800">
                 <LogOut className="h-4 w-4" />
                 <span>Sign Out</span>
               </button>
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-medical-400 to-medical-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
                 {user.username.charAt(0).toUpperCase()}
               </div>
             </div>
@@ -246,13 +246,13 @@ export default function DashboardPage() {
               />
             </div>
           ) : !showForm && (
-            <div className="bg-white dark:bg-claude-900 rounded-xl border border-gray-200 dark:border-claude-600 p-5 flex items-center justify-center min-h-[200px]">
+            <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-600 p-5 flex items-center justify-center min-h-[200px]">
               <div className="text-center">
-                <div className="h-16 w-16 rounded-full bg-gray-50 dark:bg-claude-800 border-2 border-dashed border-gray-200 dark:border-claude-600 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl font-bold text-gray-300 dark:text-claude-500">?</span>
+                <div className="h-16 w-16 rounded-full bg-gray-50 dark:bg-neutral-800 border-2 border-dashed border-gray-200 dark:border-neutral-600 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-gray-300 dark:text-neutral-500">?</span>
                 </div>
-                <p className="text-sm text-gray-400 dark:text-claude-300 font-medium">No assessment results</p>
-                <p className="text-xs text-gray-400 dark:text-claude-400 mt-1">Run an assessment to see the prediction</p>
+                <p className="text-sm text-gray-400 dark:text-neutral-300 font-medium">No assessment results</p>
+                <p className="text-xs text-gray-400 dark:text-neutral-400 mt-1">Run an assessment to see the prediction</p>
               </div>
             </div>
           )}

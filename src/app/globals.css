@@ -8,29 +8,29 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-neutral-50 text-neutral-900 antialiased;
   }
 
   .dark body,
   body.dark {
-    @apply bg-claude-950 text-claude-50;
+    @apply bg-neutral-950 text-neutral-50;
   }
 
   ::selection {
-    @apply bg-medical-500/20 text-white;
+    @apply bg-brand-500/20 text-white;
   }
 
   .dark ::selection {
-    @apply bg-medical-500/30 text-white;
+    @apply bg-brand-500/30 text-white;
   }
 }
 
 @layer components {
   .card-gradient {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #F8FAFC 100%);
   }
   .dark .card-gradient {
-    background: linear-gradient(135deg, #1a1a1a 0%, #0c0a09 100%);
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
   }
 }
 
@@ -48,22 +48,22 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100;
+  @apply bg-neutral-100;
 }
 .dark ::-webkit-scrollbar-track {
-  @apply bg-claude-950;
+  @apply bg-neutral-950;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-full;
+  @apply bg-neutral-300 rounded-full;
 }
 .dark ::-webkit-scrollbar-thumb {
-  @apply bg-claude-700 rounded-full;
+  @apply bg-neutral-700 rounded-full;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400;
+  @apply bg-neutral-400;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  @apply bg-claude-600;
+  @apply bg-neutral-600;
 }
 
 @keyframes shimmer {
@@ -71,12 +71,12 @@
   100% { background-position: 200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
   border-radius: 0.375rem;
 }
 .dark .skeleton {
-  background: linear-gradient(90deg, #2a2a2a 25%, #333333 50%, #2a2a2a 75%);
+  background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
   background-size: 200% 100%;
 }
