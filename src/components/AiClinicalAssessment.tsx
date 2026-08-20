@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles, Stethoscope, Lightbulb, AlertTriangle, Clock } from 'lucide-react';
+import { Sparkles, Stethoscope, Lightbulb, AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
 
 interface AiClinicalAssessmentProps {
@@ -27,24 +27,35 @@ export default function AiClinicalAssessment({
 }: AiClinicalAssessmentProps) {
   if (loading) {
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-600 p-5 card-gradient animate-fade-in">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="skeleton h-8 w-8 rounded-lg" />
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-card p-5 animate-fade-in">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="skeleton h-9 w-9 rounded-xl" />
           <div className="space-y-1.5 flex-1">
-            <div className="skeleton h-4 w-40" />
-            <div className="skeleton h-3 w-24" />
+            <div className="skeleton h-4 w-44" />
+            <div className="skeleton h-3 w-28" />
           </div>
+          <div className="skeleton h-6 w-24 rounded-full" />
         </div>
-        <div className="space-y-3">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="skeleton h-4 w-full" />
-          ))}
-        </div>
-        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-neutral-700">
-          <div className="skeleton h-5 w-48 mb-3" />
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="skeleton h-4 w-full mb-2" />
-          ))}
+        <div className="space-y-4">
+          <div className="p-4 rounded-xl border border-neutral-100 dark:border-neutral-800">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="skeleton h-6 w-6 rounded-md" />
+              <div className="skeleton h-4 w-24" />
+            </div>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="skeleton h-3.5 w-full mb-2" />
+            ))}
+          </div>
+          <div className="p-4 rounded-xl border border-neutral-100 dark:border-neutral-800">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="skeleton h-6 w-6 rounded-md" />
+              <div className="skeleton h-4 w-32" />
+            </div>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="skeleton h-3.5 w-full mb-2" />
+            ))}
+          </div>
+          <div className="skeleton h-12 w-full rounded-xl" />
         </div>
       </div>
     );
@@ -52,21 +63,21 @@ export default function AiClinicalAssessment({
 
   if (!summary && !recommendations) {
     return (
-      <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-600 p-5 card-gradient animate-fade-in">
+      <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-card p-5 card-gradient animate-fade-in">
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-8 w-8 rounded-lg bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
+          <div className="h-9 w-9 rounded-xl bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
             <Sparkles className="h-4 w-4 text-brand-600 dark:text-brand-400" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-800 dark:text-neutral-50">AI Clinical Assessment</h3>
-            <p className="text-xs text-gray-400 dark:text-neutral-400">Clinical analysis &mdash; real-time</p>
+            <h3 className="text-sm font-semibold text-neutral-800 dark:text-neutral-50">AI Clinical Assessment</h3>
+            <p className="text-xs text-neutral-400 dark:text-neutral-400">Clinical analysis &mdash; real-time</p>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <Stethoscope className="h-10 w-10 text-gray-300 dark:text-neutral-500 mb-3" />
-            <p className="text-sm text-gray-400 dark:text-neutral-400">
-              Assess a patient to see the AI-generated clinical analysis.
-            </p>
+          <Stethoscope className="h-10 w-10 text-neutral-300 dark:text-neutral-500 mb-3" />
+          <p className="text-sm text-neutral-400 dark:text-neutral-400">
+            Assess a patient to see the AI-generated clinical analysis.
+          </p>
         </div>
       </div>
     );
@@ -80,80 +91,83 @@ export default function AiClinicalAssessment({
     urgencyLevel === 'High' ? 'bg-danger-500' : urgencyLevel === 'Moderate' ? 'bg-warning-500' : 'bg-success-500';
 
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-600 card-gradient animate-fade-in overflow-hidden">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-card card-gradient animate-fade-in overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-neutral-700 flex items-center justify-between">
+      <div className="px-5 py-4 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-brand-50 dark:bg-brand-950/30 flex items-center justify-center">
-            <Sparkles className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-soft">
+            <Sparkles className="h-4 w-4 text-white" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-800 dark:text-neutral-50">
+            <h3 className="text-sm font-semibold text-neutral-800 dark:text-neutral-50">
               AI Clinical Assessment
             </h3>
-            <p className="text-xs text-gray-400 dark:text-neutral-400">
+            <p className="text-xs text-neutral-400 dark:text-neutral-400">
               Clinical analysis &mdash; real-time
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Clock className="h-3.5 w-3.5 text-gray-400" />
-          <span className="text-xs text-gray-400 dark:text-neutral-400">Real-time</span>
-          <span className={clsx('ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold text-white', urgencyColor)}>
-            {urgencyLevel} Urgency
-          </span>
-        </div>
+        <span className={clsx('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-white shadow-soft', urgencyColor)}>
+          <span className="h-1.5 w-1.5 rounded-full bg-white/80 animate-pulse" />
+          {urgencyLevel} Urgency
+        </span>
       </div>
 
-      <div className="p-5 space-y-5">
+      <div className="p-5 space-y-4">
         {/* Clinical Summary */}
-        <div className="p-4 rounded-lg bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-800">
-          <div className="flex items-center gap-2 mb-3">
-            <Stethoscope className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-            <span className="text-sm font-semibold text-brand-800 dark:text-brand-300">
+        <section className="p-4 rounded-xl bg-brand-50/60 dark:bg-brand-900/15 border border-brand-100 dark:border-brand-800/60">
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="h-7 w-7 rounded-lg bg-brand-100 dark:bg-brand-800/60 flex items-center justify-center">
+              <Stethoscope className="h-3.5 w-3.5 text-brand-600 dark:text-brand-300" />
+            </div>
+            <span className="text-sm font-semibold text-brand-800 dark:text-brand-200">
               Assessment
             </span>
           </div>
           {summaryBullets.length > 0 ? (
-            <ul className="space-y-2">
+            <ul className="space-y-2.5">
               {summaryBullets.map((bullet, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-neutral-200 leading-relaxed">
-                  <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-brand-400 flex-shrink-0" />
+                <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
+                  <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-brand-400 flex-shrink-0" />
                   <span>{bullet}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-gray-700 dark:text-neutral-200 whitespace-pre-wrap">{summary}</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre-wrap">{summary}</p>
           )}
-        </div>
+        </section>
 
         {/* Recommendations */}
-        <div className="p-4 rounded-lg bg-success-50 dark:bg-blue-900/40 border border-success-100 dark:border-blue-800">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="h-4 w-4 text-success-600 dark:text-blue-300" />
-            <span className="text-sm font-semibold text-success-800 dark:text-blue-200">
+        <section className="p-4 rounded-xl bg-success-50/60 dark:bg-success-900/10 border border-success-100 dark:border-success-800/50">
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="h-7 w-7 rounded-lg bg-success-100 dark:bg-success-800/40 flex items-center justify-center">
+              <Lightbulb className="h-3.5 w-3.5 text-success-600 dark:text-success-300" />
+            </div>
+            <span className="text-sm font-semibold text-success-800 dark:text-success-200">
               Recommendations
             </span>
           </div>
           {recBullets.length > 0 ? (
-            <ul className="space-y-2">
+            <ul className="space-y-2.5">
               {recBullets.map((bullet, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-blue-100 leading-relaxed">
-                  <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-success-400 dark:bg-blue-400 flex-shrink-0" />
+                <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
+                  <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-success-400 dark:bg-success-400 flex-shrink-0" />
                   <span>{bullet}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-gray-700 dark:text-blue-100 whitespace-pre-wrap">{recommendations}</p>
+            <p className="text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre-wrap">{recommendations}</p>
           )}
-        </div>
+        </section>
 
         {/* Risk Factors Banner */}
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800">
-          <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0" />
-          <p className="text-xs text-amber-800 dark:text-amber-300 font-medium">
+        <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-50 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-800/50">
+          <div className="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-800/40 flex items-center justify-center flex-shrink-0">
+            <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          </div>
+          <p className="text-xs text-amber-800 dark:text-amber-200 font-medium leading-relaxed pt-1">
             {prediction?.toLowerCase() === 'difficult'
               ? 'Difficult airway anticipated — ensure difficult airway cart and experienced clinician available.'
               : prediction?.toLowerCase() === 'moderate'
