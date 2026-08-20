@@ -58,7 +58,7 @@ export default function Sidebar() {
       {/* Brand */}
       <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100 dark:border-neutral-700">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-sm">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-soft ring-1 ring-white/20 dark:ring-white/10">
             <Stethoscope className="h-5 w-5 text-white" />
           </div>
           {!collapsed && (
@@ -93,13 +93,16 @@ export default function Sidebar() {
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={clsx(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth',
+                'relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth',
                 active
-                  ? 'bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400 shadow-sm border border-brand-100 dark:border-brand-800'
-                  : 'text-gray-500 dark:text-neutral-300 hover:text-gray-700 dark:hover:text-neutral-50 hover:bg-gray-50 dark:hover:bg-neutral-800 border border-transparent'
+                  ? 'bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400 shadow-soft'
+                  : 'text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-50 hover:bg-neutral-50 dark:hover:bg-neutral-800'
               )}
             >
-              <Icon className={clsx('h-5 w-5 flex-shrink-0', active ? 'text-brand-600 dark:text-brand-400' : 'text-gray-400 dark:text-neutral-400')} />
+              {active && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r-full bg-brand-500" />
+              )}
+              <Icon className={clsx('h-5 w-5 flex-shrink-0', active ? 'text-brand-600 dark:text-brand-400' : 'text-neutral-400 dark:text-neutral-400')} />
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
@@ -111,7 +114,7 @@ export default function Sidebar() {
         <div className="border-t border-gray-100 dark:border-neutral-700 px-4 py-4 space-y-2">
           {user && (
             <div className="flex items-center gap-3 px-3 py-2">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white text-sm font-semibold shadow-soft">
                 {user.username.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
@@ -143,10 +146,10 @@ export default function Sidebar() {
       {mobileOpen && (
         <div className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm lg:hidden" onClick={() => setMobileOpen(false)} />
       )}
-      <aside className={clsx('fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-neutral-900 shadow-xl border-r border-gray-200 dark:border-neutral-700 transform transition-transform duration-300 ease-in-out lg:hidden', mobileOpen ? 'translate-x-0' : '-translate-x-full')}>
+      <aside className={clsx('fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-neutral-900 shadow-elevated border-r border-neutral-200 dark:border-neutral-700 transform transition-transform duration-300 ease-in-out lg:hidden', mobileOpen ? 'translate-x-0' : '-translate-x-full')}>
         {sidebarContent}
       </aside>
-      <aside className={clsx('hidden lg:flex flex-col fixed inset-y-0 left-0 bg-white dark:bg-neutral-900 border-r border-gray-200 dark:border-neutral-700 shadow-sm transition-all duration-300 ease-in-out z-30', collapsed ? 'w-16' : 'w-64')}>
+      <aside className={clsx('hidden lg:flex flex-col fixed inset-y-0 left-0 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 shadow-soft transition-[width] duration-300 ease-in-out z-30', collapsed ? 'w-16' : 'w-64')}>
         {sidebarContent}
       </aside>
     </>
