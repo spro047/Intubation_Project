@@ -92,13 +92,13 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
 
   const inputClass = (field: string) =>
     clsx(
-      'w-full px-2.5 py-2 text-sm border rounded-lg transition-smooth focus:outline-none focus:ring-2 bg-white dark:bg-neutral-800',
+      'w-full px-3 py-2 text-sm border rounded-lg transition-smooth focus:outline-none focus:ring-2 bg-white dark:bg-neutral-800 shadow-soft',
       errors[field]
         ? 'border-danger-300 focus:ring-danger-200 dark:border-danger-600'
         : 'border-neutral-200 dark:border-neutral-600 focus:ring-brand-300 focus:border-brand-400 dark:focus:border-brand-400 hover:border-neutral-300 dark:hover:border-neutral-500'
     );
 
-  const labelClass = 'block text-xs font-medium text-neutral-500 dark:text-neutral-300 mb-1';
+  const labelClass = 'block text-xs font-medium text-neutral-600 dark:text-neutral-300 mb-1.5';
   const sectionTab = (id: string, label: string, icon: React.ElementType) => {
     const Icon = icon;
     return (
@@ -106,10 +106,10 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
         type="button"
         onClick={() => setActiveSection(id)}
         className={clsx(
-          'flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-smooth border',
+          'flex flex-1 items-center justify-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-full transition-smooth',
           activeSection === id
-            ? 'bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-400 border-brand-200 dark:border-brand-800'
-            : 'text-neutral-500 dark:text-neutral-300 border-transparent hover:bg-neutral-50 dark:hover:bg-neutral-800'
+            ? 'bg-white dark:bg-neutral-900 text-brand-700 dark:text-brand-300 shadow-soft'
+            : 'text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-100'
         )}
       >
         <Icon className="h-3.5 w-3.5" />
@@ -173,24 +173,28 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
             </div>
             <div className="flex gap-1">
               <button type="button" onClick={() => { handleChange('patient_id', 'TEST-EASY-001'); handleChange('age', '54'); handleChange('gender', 'Female'); handleChange('bmi', '23.7'); handleChange('mallampati_score', '1'); handleChange('tmd', '7.6'); handleChange('neck_circumference', '36.4'); handleChange('mouth_opening', '43.7'); handleChange('smd', '16.1'); handleChange('neck_movement', '96.4'); setErrors({}); setActiveSection('demographics'); }}
-                className="flex items-center gap-1 px-1.5 py-1 text-[10px] font-medium rounded-md border border-success-200 bg-success-50 text-success-700 hover:bg-success-100 transition-smooth">
+                title="Load easy test patient"
+                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-full border border-success-200 bg-success-50 text-success-700 hover:bg-success-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> E
               </button>
               <button type="button" onClick={() => { handleChange('patient_id', 'TEST-MOD-001'); handleChange('age', '54'); handleChange('gender', 'Female'); handleChange('bmi', '32.9'); handleChange('mallampati_score', '4'); handleChange('tmd', '6.1'); handleChange('neck_circumference', '39.2'); handleChange('mouth_opening', '50.9'); handleChange('smd', '15.7'); handleChange('neck_movement', '93.2'); setErrors({}); setActiveSection('demographics'); }}
-                className="flex items-center gap-1 px-1.5 py-1 text-[10px] font-medium rounded-md border border-warning-200 bg-warning-50 text-warning-700 hover:bg-warning-100 transition-smooth">
+                title="Load moderate test patient"
+                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-full border border-warning-200 bg-warning-50 text-warning-700 hover:bg-warning-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> M
               </button>
               <button type="button" onClick={() => { handleChange('patient_id', 'TEST-DIFF-001'); handleChange('age', '58'); handleChange('gender', 'Female'); handleChange('bmi', '50.0'); handleChange('mallampati_score', '4'); handleChange('tmd', '5.7'); handleChange('neck_circumference', '46.8'); handleChange('mouth_opening', '40.0'); handleChange('smd', '18.4'); handleChange('neck_movement', '81.2'); setErrors({}); setActiveSection('demographics'); }}
-                className="flex items-center gap-1 px-1.5 py-1 text-[10px] font-medium rounded-md border border-danger-200 bg-danger-50 text-danger-700 hover:bg-danger-100 transition-smooth">
+                title="Load difficult test patient"
+                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-full border border-danger-200 bg-danger-50 text-danger-700 hover:bg-danger-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> D
               </button>
               <button type="button" onClick={() => { setFormData(generateRandomData()); setErrors({}); setActiveSection('demographics'); }}
-                className="flex items-center gap-1 px-1.5 py-1 text-[10px] font-medium rounded-md border border-neutral-200 bg-neutral-50 text-neutral-600 hover:bg-neutral-100 transition-smooth">
+                title="Load random test patient"
+                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-full border border-neutral-200 bg-neutral-50 text-neutral-600 hover:bg-neutral-100 transition-smooth">
                 <Shuffle className="h-2.5 w-2.5" />
               </button>
             </div>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-full">
             {sectionTab('demographics', 'Basic', User)}
             {sectionTab('airway', 'Airway', Stethoscope)}
             {sectionTab('physical', 'Physical', ClipboardList)}
@@ -200,7 +204,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
 
       <form onSubmit={handleSubmit} className={pad}>
         {compact ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
               <label htmlFor="patient_id" className={labelClass}>Patient ID <span className="text-danger-500">*</span></label>
               <input id="patient_id" type="text" placeholder="e.g. P-2024-0001"
@@ -208,7 +212,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
                 className={inputClass('patient_id')} />
               {errors.patient_id && <p className="mt-0.5 text-[10px] text-danger-500">{errors.patient_id}</p>}
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-3">
               <div>
                 <label htmlFor="age" className={labelClass}>Age</label>
                 <input id="age" type="number" min={0} max={120} placeholder="45"
@@ -233,7 +237,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
                 {errors.bmi && <p className="mt-0.5 text-[10px] text-danger-500">{errors.bmi}</p>}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label htmlFor="mallampati" className={labelClass}>Mallampati</label>
                 <select id="mallampati" value={formData.mallampati_score || ''}
@@ -252,7 +256,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
                 {errors.tmd && <p className="mt-0.5 text-[10px] text-danger-500">{errors.tmd}</p>}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label htmlFor="neck" className={labelClass}>Neck (cm)</label>
                 <input id="neck" type="number" min={20} max={60} step={0.1} placeholder="38.0"
@@ -268,7 +272,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
                 {errors.mouth_opening && <p className="mt-0.5 text-[10px] text-danger-500">{errors.mouth_opening}</p>}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label htmlFor="smd" className={labelClass}>SMD (cm)</label>
                 <input id="smd" type="number" min={3} max={20} step={0.1} placeholder="14.0"
@@ -290,7 +294,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
               {showAdvanced ? 'Less' : 'More'}
             </button>
             {showAdvanced && (
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className={labelClass}>Beard</label>
                   <select value={formData.beard} onChange={(e) => handleChange('beard', e.target.value)} className={inputClass('beard')}>
@@ -327,7 +331,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
         ) : (
           <>
             {activeSection === 'demographics' && (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div>
                   <label htmlFor="patient_id" className={labelClass}>Patient ID <span className="text-danger-500">*</span></label>
                   <input id="patient_id" type="text" placeholder="e.g. P-2024-0001"
@@ -335,7 +339,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
                     className={inputClass('patient_id')} />
                   {errors.patient_id && <p className="mt-0.5 text-[10px] text-danger-500">{errors.patient_id}</p>}
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-3">
                   <div>
                     <label htmlFor="age" className={labelClass}>Age</label>
                     <input id="age" type="number" min={0} max={120} placeholder="45"
@@ -363,7 +367,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
               </div>
             )}
             {activeSection === 'airway' && (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div>
                   <label htmlFor="mallampati" className={labelClass}>Mallampati Score</label>
                   <select id="mallampati" value={formData.mallampati_score || ''}
@@ -374,7 +378,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
                   </select>
                   {errors.mallampati_score && <p className="mt-0.5 text-[10px] text-danger-500">{errors.mallampati_score}</p>}
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label htmlFor="tmd" className={labelClass}>TMD (cm)</label>
                     <input id="tmd" type="number" min={3} max={12} step={0.1} placeholder="6.5"
@@ -393,8 +397,8 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
               </div>
             )}
             {activeSection === 'physical' && (
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label htmlFor="neck" className={labelClass}>Neck Circ (cm)</label>
                     <input id="neck" type="number" min={20} max={60} step={0.1} placeholder="38.0"
@@ -424,7 +428,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
                     {showAdvanced ? 'Less' : 'More'} findings
                   </button>
                   {showAdvanced && (
-                    <div className="grid grid-cols-2 gap-2 mt-3">
+                    <div className="grid grid-cols-2 gap-3 mt-3">
                       {yesNoSelect('beard', 'Beard')}
                       <div>
                         <label className={labelClass}>Chest</label>
@@ -459,7 +463,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
         )}
 
         {Object.keys(errors).length > 0 && (
-          <div className="mt-3 p-2 bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 rounded-lg">
+          <div className="mt-4 p-2 bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 rounded-lg">
             <p className="text-[10px] text-danger-600 dark:text-danger-400 flex items-center gap-1">
               <AlertCircle className="h-3 w-3" />
               Fix errors above before submitting
@@ -467,15 +471,15 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
           </div>
         )}
 
-        <div className="mt-3">
+        <div className="mt-4">
           <button
             type="submit"
             disabled={loading}
             className={clsx(
-              'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-smooth shadow-sm',
+              'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-smooth shadow-soft',
               loading
                 ? 'bg-brand-300 cursor-not-allowed'
-                : 'bg-brand-600 hover:bg-brand-700 hover:shadow-md active:scale-[0.98]'
+                : 'bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 hover:shadow-card active:scale-[0.98]'
             )}
           >
             {loading && (
