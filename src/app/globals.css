@@ -27,19 +27,16 @@
 
 @layer components {
   .card-gradient {
-    background: linear-gradient(135deg, #ffffff 0%, #F8FAFC 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   }
   .dark .card-gradient {
-    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    background: linear-gradient(180deg, #18181B 0%, #09090B 100%);
   }
 }
 
 @layer utilities {
   .transition-smooth {
     @apply transition-all duration-300 ease-in-out;
-  }
-  .shadow-card {
-    @apply shadow-sm hover:shadow-md transition-shadow duration-300;
   }
 }
 
@@ -77,6 +74,6 @@
   border-radius: 0.375rem;
 }
 .dark .skeleton {
-  background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
+  background: linear-gradient(90deg, #27272A 25%, #3F3F46 50%, #27272A 75%);
   background-size: 200% 100%;
 }
