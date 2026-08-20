@@ -12,11 +12,11 @@ interface StatsCardProps {
 
 export default function StatsCard({ easy, moderate, difficult, total }: StatsCardProps) {
   return (
-    <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm overflow-hidden">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-card overflow-hidden">
       <div className="px-4 py-3 border-b border-neutral-100 dark:border-neutral-700 flex items-center gap-2">
         <Activity className="h-4 w-4 text-brand-500 dark:text-brand-400" />
         <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-          Today
+          Overview
         </span>
       </div>
       <div className="p-4">
