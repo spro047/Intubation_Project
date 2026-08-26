@@ -92,10 +92,10 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
 
   const inputClass = (field: string) =>
     clsx(
-      'w-full px-3 py-2 text-sm border rounded-lg transition-smooth focus:outline-none focus:ring-2 bg-white dark:bg-neutral-800 shadow-soft',
+      'w-full px-3 py-2 text-sm rounded-[6px] border-2 bg-white dark:bg-neutral-800 transition-smooth focus:outline-none focus:ring-2 shadow-[5px_5px_0_#000000] dark:shadow-[5px_5px_0_#3F3F46]',
       errors[field]
         ? 'border-danger-300 focus:ring-danger-200 dark:border-danger-600'
-        : 'border-neutral-200 dark:border-neutral-600 focus:ring-brand-300 focus:border-brand-400 dark:focus:border-brand-400 hover:border-neutral-300 dark:hover:border-neutral-500'
+        : 'border-black dark:border-neutral-600 focus:ring-brand-300 focus:border-brand-400 dark:focus:border-brand-400 hover:border-neutral-300 dark:hover:border-neutral-500'
     );
 
   const labelClass = 'block text-xs font-medium text-neutral-600 dark:text-neutral-300 mb-1.5';
@@ -106,9 +106,9 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
         type="button"
         onClick={() => setActiveSection(id)}
         className={clsx(
-          'flex flex-1 items-center justify-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-sm transition-smooth',
+          'flex flex-1 items-center justify-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-[5px] transition-smooth',
           activeSection === id
-            ? 'bg-white dark:bg-neutral-900 text-brand-700 dark:text-brand-300 shadow-soft'
+            ? 'bg-white dark:bg-neutral-900 text-brand-700 dark:text-brand-300'
             : 'text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-100'
         )}
       >
@@ -194,7 +194,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
               </button>
             </div>
           </div>
-          <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-sm">
+          <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-[5px] border-2 border-black dark:border-neutral-600">
             {sectionTab('demographics', 'Basic', User)}
             {sectionTab('airway', 'Airway', Stethoscope)}
             {sectionTab('physical', 'Physical', ClipboardList)}

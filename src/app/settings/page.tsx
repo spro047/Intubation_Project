@@ -85,15 +85,15 @@ export default function SettingsPage() {
                 <button
                   onClick={toggleDark}
                   className={clsx(
-                    'relative h-7 w-12 rounded-sm transition-smooth border',
+                    'relative h-7 w-12 rounded-[4px] border-2 transition-smooth',
                     dark
-                      ? 'bg-neutral-600 border-neutral-500'
-                      : 'bg-gray-200 dark:bg-neutral-700 border-gray-300 dark:border-neutral-600'
+                      ? 'bg-neutral-600 border-neutral-400'
+                      : 'bg-white border-black'
                   )}
                 >
                   <span className={clsx(
-                    'absolute top-0.5 h-6 w-6 rounded-sm bg-white shadow-sm transition-transform border border-gray-200 dark:border-neutral-600',
-                    dark ? 'translate-x-5.5' : 'translate-x-0.5'
+                    'absolute top-0 left-0 h-6 w-6 rounded-[3px] bg-white border-2 border-black transition-transform duration-200',
+                    dark ? 'translate-x-5' : 'translate-x-0'
                   )} />
                 </button>
               </div>
