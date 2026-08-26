@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, FormEvent, useEffect } from 'react';
-import { Activity, User, Stethoscope, ClipboardList, AlertCircle, Info, FlaskConical, Shuffle, ChevronDown } from 'lucide-react';
+import { Activity, User, Stethoscope, ClipboardList, AlertCircle, Info, FlaskConical, Shuffle, ChevronDown, History } from 'lucide-react';
 import type { PredictionInput } from '@/types';
 import clsx from 'clsx';
 
@@ -32,6 +32,18 @@ const defaultFormData: PredictionInput = {
   neck_structure: 'Normal',
   jaw_movement: 'Normal',
   tissue_flexibility: 'Normal',
+  previous_airway_records: 'No',
+  disease_arthritis: 'No',
+  disease_diabetes: 'No',
+  disease_down_syndrome: 'No',
+  breathing_snoring: 'No',
+  breathing_sleep_apnea: 'No',
+  symptom_voice_changes: 'No',
+  symptom_difficulty_swallowing: 'No',
+  symptom_cant_lie_flat: 'No',
+  injury_swelling: 'No',
+  injury_previous_neck_fracture: 'No',
+  previous_emergencies_icu: 'No',
 };
 
 export default function PatientForm({ onSubmit, loading, initialData, compact }: PatientFormProps) {
@@ -150,11 +162,28 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
     const neck_structure = bmi < 25 ? 'Normal' : (Math.random() < 0.4 ? 'Normal' : 'Abnormal');
     const jaw_movement = Math.random() < 0.75 ? 'Normal' : 'Reduced';
     const tissue_flexibility = Math.random() < 0.65 ? 'Normal' : 'Reduced';
+    const prob = (p: number) => Math.random() < p;
+    const previous_airway_records = prob(0.15) ? 'Yes' : 'No';
+    const disease_arthritis = prob(Math.min(0.02 + age * 0.004, 0.8)) ? 'Yes' : 'No';
+    const disease_diabetes = prob(Math.min(0.03 + age * 0.005, 0.8)) ? 'Yes' : 'No';
+    const disease_down_syndrome = prob(0.005) ? 'Yes' : 'No';
+    const breathing_snoring = prob(Math.min(0.2 + (bmi - 15) * 0.015, 0.85)) ? 'Yes' : 'No';
+    const breathing_sleep_apnea = prob(Math.min(0.05 + (bmi - 15) * 0.008, 0.6)) ? 'Yes' : 'No';
+    const symptom_voice_changes = prob(0.1) ? 'Yes' : 'No';
+    const symptom_difficulty_swallowing = prob(0.15) ? 'Yes' : 'No';
+    const symptom_cant_lie_flat = prob(0.12) ? 'Yes' : 'No';
+    const injury_swelling = prob(0.08) ? 'Yes' : 'No';
+    const injury_previous_neck_fracture = prob(0.03) ? 'Yes' : 'No';
+    const previous_emergencies_icu = prob(0.12) ? 'Yes' : 'No';
     return {
       patient_id: `RAND-${Math.floor(1000 + Math.random() * 9000)}`,
       age, gender, bmi, mallampati_score, tmd, neck_circumference: neck_circ,
       mouth_opening, smd, neck_movement,
       beard, chest_size, neck_structure, jaw_movement, tissue_flexibility,
+      previous_airway_records, disease_arthritis, disease_diabetes, disease_down_syndrome,
+      breathing_snoring, breathing_sleep_apnea, symptom_voice_changes,
+      symptom_difficulty_swallowing, symptom_cant_lie_flat, injury_swelling,
+      injury_previous_neck_fracture, previous_emergencies_icu,
     };
   };
 
@@ -172,17 +201,17 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
               <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-50">Patient Entry</span>
             </div>
             <div className="flex gap-1">
-              <button type="button" onClick={() => { handleChange('patient_id', 'TEST-EASY-001'); handleChange('age', '54'); handleChange('gender', 'Female'); handleChange('bmi', '23.7'); handleChange('mallampati_score', '1'); handleChange('tmd', '7.6'); handleChange('neck_circumference', '36.4'); handleChange('mouth_opening', '43.7'); handleChange('smd', '16.1'); handleChange('neck_movement', '96.4'); setErrors({}); setActiveSection('demographics'); }}
+              <button type="button" onClick={() => { handleChange('patient_id', 'TEST-EASY-001'); handleChange('age', '54'); handleChange('gender', 'Female'); handleChange('bmi', '23.7'); handleChange('mallampati_score', '1'); handleChange('tmd', '7.6'); handleChange('neck_circumference', '36.4'); handleChange('mouth_opening', '43.7'); handleChange('smd', '16.1'); handleChange('neck_movement', '96.4'); handleChange('previous_airway_records', 'No'); handleChange('disease_arthritis', 'No'); handleChange('disease_diabetes', 'No'); handleChange('disease_down_syndrome', 'No'); handleChange('breathing_snoring', 'No'); handleChange('breathing_sleep_apnea', 'No'); handleChange('symptom_voice_changes', 'No'); handleChange('symptom_difficulty_swallowing', 'No'); handleChange('symptom_cant_lie_flat', 'No'); handleChange('injury_swelling', 'No'); handleChange('injury_previous_neck_fracture', 'No'); handleChange('previous_emergencies_icu', 'No'); setErrors({}); setActiveSection('demographics'); }}
                 title="Load easy test patient"
                 className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-sm border border-success-200 bg-success-50 text-success-700 hover:bg-success-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> E
               </button>
-              <button type="button" onClick={() => { handleChange('patient_id', 'TEST-MOD-001'); handleChange('age', '54'); handleChange('gender', 'Female'); handleChange('bmi', '32.9'); handleChange('mallampati_score', '4'); handleChange('tmd', '6.1'); handleChange('neck_circumference', '39.2'); handleChange('mouth_opening', '50.9'); handleChange('smd', '15.7'); handleChange('neck_movement', '93.2'); setErrors({}); setActiveSection('demographics'); }}
+              <button type="button" onClick={() => { handleChange('patient_id', 'TEST-MOD-001'); handleChange('age', '54'); handleChange('gender', 'Female'); handleChange('bmi', '32.9'); handleChange('mallampati_score', '4'); handleChange('tmd', '6.1'); handleChange('neck_circumference', '39.2'); handleChange('mouth_opening', '50.9'); handleChange('smd', '15.7'); handleChange('neck_movement', '93.2'); handleChange('previous_airway_records', 'No'); handleChange('disease_arthritis', 'No'); handleChange('disease_diabetes', 'No'); handleChange('disease_down_syndrome', 'No'); handleChange('breathing_snoring', 'Yes'); handleChange('breathing_sleep_apnea', 'No'); handleChange('symptom_voice_changes', 'No'); handleChange('symptom_difficulty_swallowing', 'No'); handleChange('symptom_cant_lie_flat', 'Yes'); handleChange('injury_swelling', 'No'); handleChange('injury_previous_neck_fracture', 'No'); handleChange('previous_emergencies_icu', 'No'); setErrors({}); setActiveSection('demographics'); }}
                 title="Load moderate test patient"
                 className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-sm border border-warning-200 bg-warning-50 text-warning-700 hover:bg-warning-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> M
               </button>
-              <button type="button" onClick={() => { handleChange('patient_id', 'TEST-DIFF-001'); handleChange('age', '58'); handleChange('gender', 'Female'); handleChange('bmi', '50.0'); handleChange('mallampati_score', '4'); handleChange('tmd', '5.7'); handleChange('neck_circumference', '46.8'); handleChange('mouth_opening', '40.0'); handleChange('smd', '18.4'); handleChange('neck_movement', '81.2'); setErrors({}); setActiveSection('demographics'); }}
+              <button type="button" onClick={() => { handleChange('patient_id', 'TEST-DIFF-001'); handleChange('age', '58'); handleChange('gender', 'Female'); handleChange('bmi', '50.0'); handleChange('mallampati_score', '4'); handleChange('tmd', '5.7'); handleChange('neck_circumference', '46.8'); handleChange('mouth_opening', '40.0'); handleChange('smd', '18.4'); handleChange('neck_movement', '81.2'); handleChange('previous_airway_records', 'Yes'); handleChange('disease_arthritis', 'No'); handleChange('disease_diabetes', 'Yes'); handleChange('disease_down_syndrome', 'No'); handleChange('breathing_snoring', 'Yes'); handleChange('breathing_sleep_apnea', 'Yes'); handleChange('symptom_voice_changes', 'No'); handleChange('symptom_difficulty_swallowing', 'Yes'); handleChange('symptom_cant_lie_flat', 'Yes'); handleChange('injury_swelling', 'Yes'); handleChange('injury_previous_neck_fracture', 'No'); handleChange('previous_emergencies_icu', 'Yes'); setErrors({}); setActiveSection('demographics'); }}
                 title="Load difficult test patient"
                 className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-sm border border-danger-200 bg-danger-50 text-danger-700 hover:bg-danger-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> D
@@ -198,6 +227,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
             {sectionTab('demographics', 'Basic', User)}
             {sectionTab('airway', 'Airway', Stethoscope)}
             {sectionTab('physical', 'Physical', ClipboardList)}
+            {sectionTab('history', 'History', History)}
           </div>
         </div>
       )}
@@ -456,6 +486,24 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
                       </div>
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+            {activeSection === 'history' && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  {yesNoSelect('previous_airway_records', 'Previous Airway Records')}
+                  {yesNoSelect('disease_arthritis', 'Arthritis')}
+                  {yesNoSelect('disease_diabetes', 'Diabetes')}
+                  {yesNoSelect('disease_down_syndrome', 'Down Syndrome')}
+                  {yesNoSelect('breathing_snoring', 'Snoring')}
+                  {yesNoSelect('breathing_sleep_apnea', 'Sleep Apnea')}
+                  {yesNoSelect('symptom_voice_changes', 'Voice Changes')}
+                  {yesNoSelect('symptom_difficulty_swallowing', 'Difficulty Swallowing')}
+                  {yesNoSelect('symptom_cant_lie_flat', "Can't Lie Flat")}
+                  {yesNoSelect('injury_swelling', 'Swelling')}
+                  {yesNoSelect('injury_previous_neck_fracture', 'Previous Neck Fracture')}
+                  {yesNoSelect('previous_emergencies_icu', 'Previous Emergencies/ICU')}
                 </div>
               </div>
             )}
