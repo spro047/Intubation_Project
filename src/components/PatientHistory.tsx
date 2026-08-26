@@ -135,7 +135,7 @@ export default function PatientHistory({
           >
             <span>{tab.label}</span>
             <span className={clsx(
-              'px-1.5 py-0.5 text-[10px] font-semibold rounded-full',
+              'px-1.5 py-0.5 text-[10px] font-semibold rounded-sm',
               filter === tab.value
                 ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-200'
                 : 'bg-transparent text-neutral-400 dark:text-neutral-400'
@@ -196,8 +196,8 @@ export default function PatientHistory({
                       <td className="py-3 pr-3"><span className="text-sm font-medium text-neutral-800 dark:text-neutral-50">{pred.patient_id}</span></td>
                       <td className="py-3 pr-3"><span className="text-sm text-neutral-500 dark:text-neutral-300">{formatDate(pred.created_at)}</span></td>
                       <td className="py-3 pr-3">
-                        <span className={clsx('inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold', b.bg, b.text)}>
-                          <span className={clsx('h-1.5 w-1.5 rounded-full', b.dot)} />
+                        <span className={clsx('inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm text-xs font-semibold', b.bg, b.text)}>
+                          <span className={clsx('h-1.5 w-1.5 rounded-sm', b.dot)} />
                           {pred.prediction}
                         </span>
                       </td>

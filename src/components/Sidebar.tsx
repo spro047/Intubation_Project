@@ -58,7 +58,7 @@ export default function Sidebar() {
       {/* Brand */}
       <div className="flex items-center justify-between px-4 py-5 border-b border-gray-100 dark:border-neutral-700">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-soft ring-1 ring-white/20 dark:ring-white/10">
+          <div className="h-9 w-9 rounded-xl bg-black flex items-center justify-center shadow-soft ring-1 ring-white/20 dark:ring-white/10">
             <Stethoscope className="h-5 w-5 text-white" />
           </div>
           {!collapsed && (
@@ -114,7 +114,7 @@ export default function Sidebar() {
         <div className="border-t border-gray-100 dark:border-neutral-700 px-4 py-4 space-y-2">
           {user && (
             <div className="flex items-center gap-3 px-3 py-2">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white text-sm font-semibold shadow-soft">
+              <div className="h-8 w-8 rounded-sm bg-black flex items-center justify-center text-white text-sm font-semibold shadow-soft">
                 {user.username.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">

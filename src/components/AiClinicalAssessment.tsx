@@ -34,7 +34,7 @@ export default function AiClinicalAssessment({
             <div className="skeleton h-4 w-44" />
             <div className="skeleton h-3 w-28" />
           </div>
-          <div className="skeleton h-6 w-24 rounded-full" />
+          <div className="skeleton h-6 w-24 rounded-sm" />
         </div>
         <div className="space-y-4">
           <div className="p-4 rounded-xl border border-neutral-100 dark:border-neutral-800">
@@ -95,7 +95,7 @@ export default function AiClinicalAssessment({
       {/* Header */}
       <div className="px-5 py-4 border-b border-neutral-100 dark:border-neutral-700 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-soft">
+          <div className="h-9 w-9 rounded-xl bg-black flex items-center justify-center shadow-soft">
             <Sparkles className="h-4 w-4 text-white" />
           </div>
           <div>
@@ -107,8 +107,8 @@ export default function AiClinicalAssessment({
             </p>
           </div>
         </div>
-        <span className={clsx('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-white shadow-soft', urgencyColor)}>
-          <span className="h-1.5 w-1.5 rounded-full bg-white/80 animate-pulse" />
+        <span className={clsx('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-[10px] font-bold text-black border-2 border-black shadow-[3px_3px_0_#111]', urgencyColor)}>
+          <span className="h-1.5 w-1.5 rounded-sm bg-black/80 animate-pulse" />
           {urgencyLevel} Urgency
         </span>
       </div>
@@ -128,7 +128,7 @@ export default function AiClinicalAssessment({
             <ul className="space-y-2.5">
               {summaryBullets.map((bullet, i) => (
                 <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
-                  <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-brand-400 flex-shrink-0" />
+                  <span className="mt-[7px] h-1.5 w-1.5 rounded-sm bg-brand-400 flex-shrink-0" />
                   <span>{bullet}</span>
                 </li>
               ))}
@@ -152,7 +152,7 @@ export default function AiClinicalAssessment({
             <ul className="space-y-2.5">
               {recBullets.map((bullet, i) => (
                 <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
-                  <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-success-400 dark:bg-success-400 flex-shrink-0" />
+                  <span className="mt-[7px] h-1.5 w-1.5 rounded-sm bg-success-400 dark:bg-success-400 flex-shrink-0" />
                   <span>{bullet}</span>
                 </li>
               ))}

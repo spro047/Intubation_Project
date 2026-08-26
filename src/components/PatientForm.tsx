@@ -106,7 +106,7 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
         type="button"
         onClick={() => setActiveSection(id)}
         className={clsx(
-          'flex flex-1 items-center justify-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-full transition-smooth',
+          'flex flex-1 items-center justify-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-sm transition-smooth',
           activeSection === id
             ? 'bg-white dark:bg-neutral-900 text-brand-700 dark:text-brand-300 shadow-soft'
             : 'text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-100'
@@ -174,27 +174,27 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
             <div className="flex gap-1">
               <button type="button" onClick={() => { handleChange('patient_id', 'TEST-EASY-001'); handleChange('age', '54'); handleChange('gender', 'Female'); handleChange('bmi', '23.7'); handleChange('mallampati_score', '1'); handleChange('tmd', '7.6'); handleChange('neck_circumference', '36.4'); handleChange('mouth_opening', '43.7'); handleChange('smd', '16.1'); handleChange('neck_movement', '96.4'); setErrors({}); setActiveSection('demographics'); }}
                 title="Load easy test patient"
-                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-full border border-success-200 bg-success-50 text-success-700 hover:bg-success-100 transition-smooth">
+                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-sm border border-success-200 bg-success-50 text-success-700 hover:bg-success-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> E
               </button>
               <button type="button" onClick={() => { handleChange('patient_id', 'TEST-MOD-001'); handleChange('age', '54'); handleChange('gender', 'Female'); handleChange('bmi', '32.9'); handleChange('mallampati_score', '4'); handleChange('tmd', '6.1'); handleChange('neck_circumference', '39.2'); handleChange('mouth_opening', '50.9'); handleChange('smd', '15.7'); handleChange('neck_movement', '93.2'); setErrors({}); setActiveSection('demographics'); }}
                 title="Load moderate test patient"
-                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-full border border-warning-200 bg-warning-50 text-warning-700 hover:bg-warning-100 transition-smooth">
+                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-sm border border-warning-200 bg-warning-50 text-warning-700 hover:bg-warning-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> M
               </button>
               <button type="button" onClick={() => { handleChange('patient_id', 'TEST-DIFF-001'); handleChange('age', '58'); handleChange('gender', 'Female'); handleChange('bmi', '50.0'); handleChange('mallampati_score', '4'); handleChange('tmd', '5.7'); handleChange('neck_circumference', '46.8'); handleChange('mouth_opening', '40.0'); handleChange('smd', '18.4'); handleChange('neck_movement', '81.2'); setErrors({}); setActiveSection('demographics'); }}
                 title="Load difficult test patient"
-                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-full border border-danger-200 bg-danger-50 text-danger-700 hover:bg-danger-100 transition-smooth">
+                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-sm border border-danger-200 bg-danger-50 text-danger-700 hover:bg-danger-100 transition-smooth">
                 <FlaskConical className="h-2.5 w-2.5" /> D
               </button>
               <button type="button" onClick={() => { setFormData(generateRandomData()); setErrors({}); setActiveSection('demographics'); }}
                 title="Load random test patient"
-                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-full border border-neutral-200 bg-neutral-50 text-neutral-600 hover:bg-neutral-100 transition-smooth">
+                className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold rounded-sm border border-neutral-200 bg-neutral-50 text-neutral-600 hover:bg-neutral-100 transition-smooth">
                 <Shuffle className="h-2.5 w-2.5" />
               </button>
             </div>
           </div>
-          <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-full">
+          <div className="flex gap-1 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-sm">
             {sectionTab('demographics', 'Basic', User)}
             {sectionTab('airway', 'Airway', Stethoscope)}
             {sectionTab('physical', 'Physical', ClipboardList)}
@@ -476,14 +476,14 @@ export default function PatientForm({ onSubmit, loading, initialData, compact }:
             type="submit"
             disabled={loading}
             className={clsx(
-              'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-smooth shadow-soft',
+              'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-black border-2 border-black transition-smooth shadow-[4px_4px_0_#111]',
               loading
-                ? 'bg-brand-300 cursor-not-allowed'
-                : 'bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 hover:shadow-card active:scale-[0.98]'
+                ? 'bg-neutral-200 cursor-not-allowed'
+                : 'bg-brand-500 hover:bg-brand-400 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#111] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none'
             )}
           >
             {loading && (
-              <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg className="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>

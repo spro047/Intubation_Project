@@ -97,7 +97,7 @@ export default function RiskPredictionCard({
         {/* Radial gauge */}
         <div className="flex justify-center items-center flex-1 py-2">
           <div className="relative h-56 w-56 animate-gauge-pulse">
-            <div className={clsx('absolute inset-8 rounded-full blur-xl', colorClasses.glow)} />
+            <div className={clsx('absolute inset-8 rounded-sm blur-xl', colorClasses.glow)} />
             <svg viewBox="0 0 120 120" className="relative h-full w-full">
               {/* Track */}
               <circle
@@ -156,9 +156,9 @@ export default function RiskPredictionCard({
                 {(confidence * 100).toFixed(1)}%
               </span>
             </div>
-            <div className="h-2.5 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-neutral-100 dark:bg-neutral-800 rounded-sm overflow-hidden">
               <div
-                className={clsx('h-full rounded-full transition-all duration-700', colorClasses.strip)}
+                className={clsx('h-full rounded-sm transition-all duration-700', colorClasses.strip)}
                 style={{
                   width: `${Math.min(100, confidence * 100)}%`,
                   transitionTimingFunction: 'cubic-bezier(0.32, 0.72, 0, 1)',
@@ -173,7 +173,7 @@ export default function RiskPredictionCard({
               Probability Distribution
             </p>
             {/* Segmented bar */}
-            <div className="h-3.5 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden flex">
+            <div className="h-3.5 bg-neutral-100 dark:bg-neutral-800 rounded-sm overflow-hidden flex">
               {order.map((key) => {
                 const val = probabilities?.[key] ?? 0;
                 const barColor =
@@ -196,7 +196,7 @@ export default function RiskPredictionCard({
                   key === 'Easy' ? 'bg-success-500' : key === 'Moderate' ? 'bg-warning-500' : 'bg-danger-500';
                 return (
                   <div key={key} className="flex items-center gap-1.5">
-                    <span className={clsx('h-2 w-2 rounded-full', dotColor)} />
+                    <span className={clsx('h-2 w-2 rounded-sm', dotColor)} />
                     <span className="text-[10px] font-medium text-neutral-500 dark:text-neutral-400">{key}</span>
                     <span className="text-[10px] font-semibold text-neutral-700 dark:text-neutral-200 tabular-nums font-mono">
                       {(val * 100).toFixed(1)}%
