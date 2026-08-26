@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from pathlib import Path
 from typing import List
 from datetime import datetime, timezone
+import asyncio
 import torch
 import pandas as pd
 import numpy as np
@@ -133,17 +134,21 @@ async def run_prediction(
     pred_doc.pop("_id", None)
 
     patient_data = data.model_dump()
-    summary = generate_clinical_summary(
-        result["prediction"], result["confidence"], result["probabilities"], patient_data
+    summary, summary_source = await asyncio.to_thread(
+        generate_clinical_summary,
+        result["prediction"], result["confidence"], result["probabilities"], patient_data,
     )
-    recommendations = generate_recommendations(
-        result["prediction"], result["confidence"], result["probabilities"], patient_data
+    recommendations, recommendations_source = await asyncio.to_thread(
+        generate_recommendations,
+        result["prediction"], result["confidence"], result["probabilities"], patient_data,
     )
 
     llm_doc = {
         "prediction_id": pred_doc["id"],
         "summary": summary or "",
         "recommendations": recommendations or "",
+        "summary_source": summary_source,
+        "recommendations_source": recommendations_source,
         "created_at": datetime.now(timezone.utc),
     }
     await db.llm_reports.insert_one(llm_doc)
@@ -153,6 +158,10 @@ async def run_prediction(
         "prediction": pred_doc,
         "clinical_summary": summary,
         "recommendations": recommendations,
+        "report_sources": {
+            "summary": summary_source,
+            "recommendations": recommendations_source,
+        },
     }
 
 

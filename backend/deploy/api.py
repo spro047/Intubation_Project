@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 from .database import connect_db, close_db, ensure_indexes
 from .model_loader import load_model
-from .routers import auth, patients, predictions
+from .routers import auth, llm, patients, predictions
 
 
 @asynccontextmanager
@@ -31,6 +31,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(llm.router)
 app.include_router(patients.router)
 app.include_router(predictions.router)
 

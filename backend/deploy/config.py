@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     llm_model: str = "qwen/qwen-2.5-72b-instruct"
     llm_temperature: float = 0.3
     llm_max_tokens: int = 512
+    llm_timeout: float = 15.0
+    llm_retries: int = 1
 
     model_checkpoint: str = "checkpoints/tabular_best.pt"
     model_device: str = "cpu"

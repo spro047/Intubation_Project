@@ -96,4 +96,6 @@ class LLMReportOut(BaseModel):
     prediction_id: str
     summary: str
     recommendations: str
+    summary_source: Optional[str] = None
+    recommendations_source: Optional[str] = None
     created_at: datetime
