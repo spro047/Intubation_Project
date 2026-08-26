@@ -31,7 +31,7 @@ export default function DashboardPage() {
   const [selectedReport, setSelectedReport] = useState<LLMReport | null>(null);
   const [loadingReport, setLoadingReport] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [llmStatus, setLlmStatus] = useState<'checking' | 'connected' | 'offline'>('checking');
+  const [llmStatus, setLlmStatus] = useState<'checking' | 'connected' | 'offline' | null>(null);
   const [predictingSlow, setPredictingSlow] = useState(false);
   const [historyFilter, setHistoryFilter] = useState<'all' | 'easy' | 'moderate' | 'difficult'>('all');
   const [showForm, setShowForm] = useState(true);
@@ -56,9 +56,6 @@ export default function DashboardPage() {
     if (window.location.hash === '#assess-form') {
       setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
     }
-    checkLlmStatus()
-      .then((s) => setLlmStatus(s.connected ? 'connected' : 'offline'))
-      .catch(() => setLlmStatus('offline'));
   }, [router]);
 
   const fetchPredictions = useCallback(async () => {
@@ -89,6 +86,9 @@ export default function DashboardPage() {
     setPredicting(true);
     setPredictingSlow(false);
     setError('');
+    checkLlmStatus()
+      .then((s) => setLlmStatus(s.connected ? 'connected' : 'offline'))
+      .catch(() => setLlmStatus('offline'));
     const controller = new AbortController();
     const slowTimer = setTimeout(() => setPredictingSlow(true), 5000);
     const failTimer = setTimeout(() => controller.abort(), 35000);
@@ -204,28 +204,24 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {llmStatus !== null && (
               <span
                 className={clsx(
                   'hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold border-2 border-black rounded-[4px]',
                   llmStatus === 'connected'
                     ? 'bg-success-50 text-success-700'
-                    : llmStatus === 'offline'
-                    ? 'bg-danger-50 text-danger-700'
-                    : 'bg-white text-neutral-500'
+                    : 'bg-danger-50 text-danger-700'
                 )}
               >
                 <span
                   className={clsx(
                     'h-1.5 w-1.5 rounded-sm',
-                    llmStatus === 'connected'
-                      ? 'bg-success-500'
-                      : llmStatus === 'offline'
-                      ? 'bg-danger-500'
-                      : 'bg-neutral-400'
+                    llmStatus === 'connected' ? 'bg-success-500' : 'bg-danger-500'
                   )}
                 />
-                {llmStatus === 'connected' ? 'AI Connected' : llmStatus === 'offline' ? 'AI Offline' : 'AI Checking…'}
+                {llmStatus === 'connected' ? 'AI Connected' : 'AI Offline'}
               </span>
+              )}
               <button
                 onClick={toggleTheme}
                 className="h-9 w-9 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 flex items-center justify-center text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-50 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-smooth"
