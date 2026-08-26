@@ -11,8 +11,12 @@ logger = logging.getLogger("airway.llm")
 _client: Optional[OpenAI] = None
 
 SYSTEM_PROMPT = (
-    "You are a clinical decision support assistant for anesthesiologists. "
-    "Answer only in short bullet points."
+    "Anesthesiologist decision-support for a difficult-airway prediction "
+    "(Easy/Moderate/Difficult: standard intubation / alternatives + backup / "
+    "advanced techniques + senior staff). Use ONLY provided patient data, "
+    "never invent values. If confidence < 60%, note uncertainty. Frame as "
+    "risk and preparation, never guaranteed outcomes. Concise, decisive, "
+    "clinical tone; short bullet points only."
 )
 
 
@@ -156,28 +160,38 @@ def _build_report_prompt(
     probs_str = ", ".join(f"{k}: {v:.1%}" for k, v in probabilities.items())
     if kind == "summary":
         content_rule = (
-            "Mention the predicted class, confidence, key risk factors, "
-            "and airway implication."
+            "Explicitly name the key risk factors you identified from the "
+            "profile, including any positive categorical findings (e.g., "
+            "snoring, sleep apnea, diabetes, difficulty swallowing, reduced "
+            "jaw or neck mobility, can't lie flat). Then state the predicted "
+            "class, confidence, and airway implication."
         )
     else:
         content_rule = (
-            "Include airway plan, backup equipment, staffing, monitoring, and "
-            f"documentation. Tailor every bullet to the {prediction} category."
+            "Tailor airway plan, equipment, staffing, monitoring and "
+            "documentation to the predicted class."
         )
-    return f"""Prediction: {prediction}
-Confidence: {confidence:.1%}
-Probabilities: {probs_str}
-
-Patient Profile:
+    bullet_rule = (
+        "Return ONLY 5 concise bullet points."
+        if kind == "summary"
+        else "Return between 5 and 10 concise bullet points."
+    )
+    return f"""Patient Profile:
 {profile}
 
-Return ONLY 5 concise bullet points.
+Model probabilities: {probs_str}
+
+Identify the key risk factors from the patient profile above, then write a {kind} for an anesthesiologist. Base every claim ONLY on facts present in the profile - never invent values.
+
+{bullet_rule}
 Rules:
 - Each line must start with "- ".
 - No introduction, no headings, no paragraph.
 - Keep every bullet under 18 words.
 - Be direct, clinical, and actionable.
-- {content_rule}"""
+- {content_rule}
+
+The model's predicted class is {prediction} ({confidence:.1%} confidence). Use it as a guide, but ground every claim in the profile above."""
 
 
 FALLBACK_SUMMARY = (
