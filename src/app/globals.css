@@ -8,29 +8,34 @@
   }
 
   body {
-    @apply bg-neutral-50 text-neutral-900 antialiased;
+    @apply bg-[#F5F1DC] text-[#111111] antialiased;
   }
 
   .dark body,
   body.dark {
-    @apply bg-neutral-950 text-neutral-50;
+    @apply bg-[#121212] text-[#EDEAE0];
   }
 
   ::selection {
-    @apply bg-brand-500/20 text-white;
+    @apply bg-[#FFD900] text-black;
   }
 
   .dark ::selection {
-    @apply bg-brand-500/30 text-white;
+    @apply bg-[#FFD900] text-black;
+  }
+
+  :focus-visible {
+    outline: 3px solid #FFD900;
+    outline-offset: 2px;
   }
 }
 
 @layer components {
   .card-gradient {
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    background: #FFFFFF;
   }
   .dark .card-gradient {
-    background: linear-gradient(180deg, #18181B 0%, #09090B 100%);
+    background: #1A1A1A;
   }
 }
 
@@ -40,27 +45,51 @@
   }
 }
 
+/* Neo-Brutalist: force structural borders to thick black outlines (light mode) */
+.border-neutral-100,
+.border-gray-100,
+.border-neutral-200,
+.border-gray-200,
+.border-neutral-300,
+.border-gray-300 {
+  border-color: #111111 !important;
+}
+
+/* Neo-Brutalist: dark mode keeps visible lighter outlines on near-black surfaces */
+.dark .border-neutral-600,
+.dark .border-gray-600 {
+  border-color: #52525B !important;
+}
+.dark .border-neutral-700,
+.dark .border-gray-700,
+.dark .border-neutral-800,
+.dark .border-gray-800 {
+  border-color: #6B6B6B !important;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-neutral-100;
+  @apply bg-[#F5F1DC];
 }
 .dark ::-webkit-scrollbar-track {
-  @apply bg-neutral-950;
+  @apply bg-[#121212];
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-neutral-300 rounded-full;
+  @apply bg-[#111111] rounded-none;
+  border: 2px solid #F5F1DC;
 }
 .dark ::-webkit-scrollbar-thumb {
-  @apply bg-neutral-700 rounded-full;
+  @apply bg-[#3F3F46];
+  border: 2px solid #121212;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-neutral-400;
+  @apply bg-black;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  @apply bg-neutral-600;
+  @apply bg-[#52525B];
 }
 
 @keyframes shimmer {
@@ -68,10 +97,10 @@
   100% { background-position: 200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, #E2E8F0 25%, #F1F5F9 50%, #E2E8F0 75%);
+  background: linear-gradient(90deg, #E0D9BE 25%, #EAE3C6 50%, #E0D9BE 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
-  border-radius: 0.375rem;
+  border-radius: 4px;
 }
 .dark .skeleton {
   background: linear-gradient(90deg, #27272A 25%, #3F3F46 50%, #27272A 75%);
