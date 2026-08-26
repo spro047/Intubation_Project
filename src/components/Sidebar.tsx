@@ -75,7 +75,7 @@ export default function Sidebar() {
         {!collapsed && (
           <button
             onClick={() => setCollapsed(true)}
-            className="hidden lg:flex h-6 w-6 items-center justify-center rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-smooth"
+            className="hidden lg:flex h-6 w-6 items-center justify-center rounded-[4px] bg-white dark:bg-neutral-800 border-2 border-black dark:border-neutral-600 shadow-[2px_2px_0_#000000] dark:shadow-[2px_2px_0_#3F3F46] text-gray-400 hover:text-gray-600 dark:hover:text-neutral-200 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-smooth"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -93,16 +93,16 @@ export default function Sidebar() {
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={clsx(
-                'relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth',
+                'relative flex items-center gap-3 px-3 py-2.5 rounded-[5px] text-sm font-medium transition-smooth border-2',
                 active
-                  ? 'bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400 shadow-soft'
-                  : 'text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-50 hover:bg-neutral-50 dark:hover:bg-neutral-800'
+                  ? 'bg-brand-500 text-black border-black dark:border-neutral-600 shadow-[4px_4px_0_#000000] dark:shadow-[4px_4px_0_#3F3F46]'
+                  : 'bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-black dark:border-neutral-600 shadow-[3px_3px_0_#000000] dark:shadow-[3px_3px_0_#3F3F46] hover:bg-neutral-100 dark:hover:bg-neutral-700'
               )}
             >
               {active && (
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r-full bg-brand-500" />
               )}
-              <Icon className={clsx('h-5 w-5 flex-shrink-0', active ? 'text-brand-600 dark:text-brand-400' : 'text-neutral-400 dark:text-neutral-400')} />
+              <Icon className={clsx('h-5 w-5 flex-shrink-0', active ? 'text-black' : 'text-neutral-400 dark:text-neutral-400')} />
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
@@ -125,7 +125,7 @@ export default function Sidebar() {
           )}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2 text-sm text-gray-500 dark:text-neutral-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-smooth"
+            className="flex items-center gap-3 w-full px-3 py-2 text-sm text-gray-500 dark:text-neutral-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-[5px] bg-white dark:bg-neutral-800 border-2 border-black dark:border-neutral-600 shadow-[3px_3px_0_#000000] dark:shadow-[3px_3px_0_#3F3F46] transition-smooth"
           >
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
@@ -139,7 +139,7 @@ export default function Sidebar() {
     <>
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden h-10 w-10 rounded-xl bg-white dark:bg-neutral-900 shadow-md border border-gray-200 dark:border-neutral-600 flex items-center justify-center text-gray-600 dark:text-neutral-200 hover:text-gray-800 transition-smooth"
+        className="fixed top-4 left-4 z-50 lg:hidden h-10 w-10 rounded-[6px] bg-white dark:bg-neutral-800 shadow-[4px_4px_0_#000000] dark:shadow-[4px_4px_0_#3F3F46] border-2 border-black dark:border-neutral-600 flex items-center justify-center text-gray-600 dark:text-neutral-200 hover:text-gray-800 transition-smooth"
       >
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>

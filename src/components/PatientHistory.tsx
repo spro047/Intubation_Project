@@ -158,7 +158,7 @@ export default function PatientHistory({
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
           <input type="text" placeholder="Search by Patient ID..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm border border-neutral-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-300 dark:focus:ring-brand-800 focus:border-brand-400 bg-white dark:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-500 transition-smooth shadow-soft" />
+            className="w-full pl-9 pr-4 py-2 text-sm border-2 border-black dark:border-neutral-600 rounded-[6px] focus:outline-none focus:ring-2 focus:ring-brand-300 dark:focus:ring-brand-800 focus:border-brand-400 bg-white dark:bg-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-500 transition-smooth shadow-[5px_5px_0_#000000] dark:shadow-[5px_5px_0_#3F3F46]" />
         </div>
 
         {filtered.length === 0 ? (
