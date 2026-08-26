@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut, Sun, Moon, User, Edit3, Plus, Activity } from 'lucide-react';
+import { LogOut, Sun, Moon, User, Edit3, Plus, Activity, Loader2 } from 'lucide-react';
+import clsx from 'clsx';
 import Sidebar from '@/components/Sidebar';
 import RiskPredictionCard from '@/components/RiskPredictionCard';
 import AiClinicalAssessment from '@/components/AiClinicalAssessment';
@@ -13,7 +14,7 @@ import MiniHistory from '@/components/MiniHistory';
 
 import {
   getPredictions, runPrediction, createPatient, deletePrediction,
-  getPredictionReport, logout, getToken, getUser,
+  getPredictionReport, logout, getToken, getUser, checkLlmStatus,
 } from '@/lib/api';
 import type { PredictionInput, PredictionResponse, PredictionHistory as PredictionHistoryType, LLMReport } from '@/types';
 
@@ -30,6 +31,8 @@ export default function DashboardPage() {
   const [selectedReport, setSelectedReport] = useState<LLMReport | null>(null);
   const [loadingReport, setLoadingReport] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [llmStatus, setLlmStatus] = useState<'checking' | 'connected' | 'offline'>('checking');
+  const [predictingSlow, setPredictingSlow] = useState(false);
   const [historyFilter, setHistoryFilter] = useState<'all' | 'easy' | 'moderate' | 'difficult'>('all');
   const [showForm, setShowForm] = useState(true);
   const [lastSubmittedPatient, setLastSubmittedPatient] = useState<PredictionInput | null>(null);
@@ -53,6 +56,9 @@ export default function DashboardPage() {
     if (window.location.hash === '#assess-form') {
       setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
     }
+    checkLlmStatus()
+      .then((s) => setLlmStatus(s.connected ? 'connected' : 'offline'))
+      .catch(() => setLlmStatus('offline'));
   }, [router]);
 
   const fetchPredictions = useCallback(async () => {
@@ -80,20 +86,34 @@ export default function DashboardPage() {
   const handleLogout = () => { logout(); router.push('/login'); };
 
   const handleSubmit = async (data: PredictionInput) => {
-    setPredicting(true); setError('');
+    setPredicting(true);
+    setPredictingSlow(false);
+    setError('');
+    const controller = new AbortController();
+    const slowTimer = setTimeout(() => setPredictingSlow(true), 5000);
+    const failTimer = setTimeout(() => controller.abort(), 35000);
     try {
       await createPatient({
         patient_id: data.patient_id, age: data.age, gender: data.gender, bmi: data.bmi,
         mallampati: String(data.mallampati_score), tmd: data.tmd, neck_circumference: data.neck_circumference,
       });
-      const result: PredictionResponse = await runPrediction(data);
+      const result: PredictionResponse = await runPrediction(data, controller.signal);
       setPredictionResult(result);
       setLastSubmittedPatient(data);
       handleClearSelection();
       fetchPredictions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Prediction failed. Please try again.');
-    } finally { setPredicting(false); }
+      if (controller.signal.aborted) {
+        setError('Time limit exceeded. There has been an error with the LLM response. Please wait for a while and try again.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Prediction failed. Please try again.');
+      }
+    } finally {
+      clearTimeout(slowTimer);
+      clearTimeout(failTimer);
+      setPredicting(false);
+      setPredictingSlow(false);
+    }
   };
 
   const handleNewAssessment = useCallback(() => {
@@ -155,6 +175,10 @@ export default function DashboardPage() {
   const moderateCount = predictions.filter((p) => p.prediction.toLowerCase() === 'moderate').length;
   const difficultCount = predictions.filter((p) => p.prediction.toLowerCase() === 'difficult').length;
 
+  const reportSources = selectedPrediction
+    ? { summary: selectedReport?.summary_source, recommendations: selectedReport?.recommendations_source }
+    : predictionResult?.report_sources;
+
   return (
     <div className="min-h-screen bg-[#F5F1DC] dark:bg-[#121212]">
       <Sidebar />
@@ -180,6 +204,28 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              <span
+                className={clsx(
+                  'hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold border-2 border-black rounded-[4px]',
+                  llmStatus === 'connected'
+                    ? 'bg-success-50 text-success-700'
+                    : llmStatus === 'offline'
+                    ? 'bg-danger-50 text-danger-700'
+                    : 'bg-white text-neutral-500'
+                )}
+              >
+                <span
+                  className={clsx(
+                    'h-1.5 w-1.5 rounded-sm',
+                    llmStatus === 'connected'
+                      ? 'bg-success-500'
+                      : llmStatus === 'offline'
+                      ? 'bg-danger-500'
+                      : 'bg-neutral-400'
+                  )}
+                />
+                {llmStatus === 'connected' ? 'AI Connected' : llmStatus === 'offline' ? 'AI Offline' : 'AI Checking…'}
+              </span>
               <button
                 onClick={toggleTheme}
                 className="h-9 w-9 rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 flex items-center justify-center text-neutral-500 dark:text-neutral-300 hover:text-neutral-700 dark:hover:text-neutral-50 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-smooth"
@@ -212,6 +258,16 @@ export default function DashboardPage() {
                 <p className="text-xs text-danger-600 dark:text-danger-400 mt-0.5">{error}</p>
               </div>
               <button onClick={() => setError('')} className="text-danger-400 hover:text-danger-600">&times;</button>
+            </div>
+          )}
+
+          {/* LLM slow warning */}
+          {predicting && predictingSlow && (
+            <div className="p-3 bg-warning-50 dark:bg-warning-900/20 border-2 border-black rounded-[6px] flex items-center gap-2.5 animate-fade-in">
+              <Loader2 className="h-4 w-4 animate-spin text-warning-600 flex-shrink-0" />
+              <p className="text-sm font-medium text-warning-800 dark:text-warning-300">
+                The LLM response is taking longer than usual. Please wait…
+              </p>
             </div>
           )}
 
@@ -280,6 +336,8 @@ export default function DashboardPage() {
               recommendations={selectedReport ? selectedReport.recommendations : predictionResult?.recommendations || ''}
               loading={predicting || loadingReport}
               prediction={activePredictionLabel || undefined}
+              slow={predictingSlow}
+              sources={reportSources}
             />
           )}
 

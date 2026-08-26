@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles, Stethoscope, Lightbulb, AlertTriangle } from 'lucide-react';
+import { Sparkles, Stethoscope, Lightbulb, AlertTriangle, Loader2 } from 'lucide-react';
 import clsx from 'clsx';
 
 interface AiClinicalAssessmentProps {
@@ -8,6 +8,8 @@ interface AiClinicalAssessmentProps {
   recommendations: string;
   loading: boolean;
   prediction?: string;
+  slow?: boolean;
+  sources?: { summary?: string; recommendations?: string };
 }
 
 function parseBullets(text: string): string[] {
@@ -24,10 +26,20 @@ export default function AiClinicalAssessment({
   recommendations,
   loading,
   prediction,
+  slow = false,
+  sources,
 }: AiClinicalAssessmentProps) {
   if (loading) {
     return (
       <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-card p-5 animate-fade-in">
+        {slow && (
+          <div className="flex items-center gap-2 p-2.5 mb-4 bg-warning-50 dark:bg-warning-900/20 border-2 border-black rounded-[6px]">
+            <Loader2 className="h-4 w-4 animate-spin text-warning-600 flex-shrink-0" />
+            <p className="text-xs font-medium text-warning-800 dark:text-warning-300">
+              The LLM response is taking longer than usual. Please wait…
+            </p>
+          </div>
+        )}
         <div className="flex items-center gap-3 mb-5">
           <div className="skeleton h-9 w-9 rounded-xl" />
           <div className="space-y-1.5 flex-1">
@@ -112,6 +124,15 @@ export default function AiClinicalAssessment({
           {urgencyLevel} Urgency
         </span>
       </div>
+
+      {(sources?.summary === 'fallback' || sources?.recommendations === 'fallback') && (
+        <div className="flex items-center gap-2 px-5 py-2.5 bg-danger-50 dark:bg-danger-900/20 border-b-2 border-black">
+          <AlertTriangle className="h-4 w-4 text-danger-500 flex-shrink-0" />
+          <p className="text-xs font-medium text-danger-700 dark:text-danger-300">
+            AI assistant unavailable — showing standard guidance.
+          </p>
+        </div>
+      )}
 
       <div className="p-5 space-y-4">
         {/* Clinical Summary */}

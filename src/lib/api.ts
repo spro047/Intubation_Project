@@ -5,6 +5,7 @@ import type {
   PredictionResponse,
   PredictionHistory,
   LLMReport,
+  LlmStatus,
 } from '@/types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
@@ -131,12 +132,18 @@ export async function getPatient(id: string): Promise<Patient> {
 }
 
 export async function runPrediction(
-  data: PredictionInput
+  data: PredictionInput,
+  signal?: AbortSignal
 ): Promise<PredictionResponse> {
   return apiFetch<PredictionResponse>('/api/predictions', {
     method: 'POST',
     body: JSON.stringify(data),
+    signal,
   });
+}
+
+export async function checkLlmStatus(): Promise<LlmStatus> {
+  return apiFetch<LlmStatus>('/api/llm/status');
 }
 
 export async function getPredictions(

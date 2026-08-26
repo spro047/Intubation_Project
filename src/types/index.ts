@@ -65,6 +65,7 @@ export interface PredictionResponse {
   prediction: PredictionResult;
   clinical_summary: string;
   recommendations: string;
+  report_sources?: { summary?: string; recommendations?: string };
 }
 
 export interface PredictionHistory {
@@ -81,5 +82,13 @@ export interface LLMReport {
   prediction_id: string;
   summary: string;
   recommendations: string;
+  summary_source?: string;
+  recommendations_source?: string;
   created_at: string;
+}
+
+export interface LlmStatus {
+  connected: boolean;
+  model: string;
+  latency_ms: number | null;
 }
