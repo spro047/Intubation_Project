@@ -109,21 +109,21 @@ export default function DashboardPage() {
       <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-card animate-fade-in">
         <div className="px-5 py-4 flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-soft">
+            <div className="h-10 w-10 rounded-xl bg-black flex items-center justify-center shadow-soft">
               <User className="h-5 w-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-50">{patient.patient_id}</span>
-                <span className="text-[10px] font-medium text-neutral-400 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full">{patient.gender}</span>
+                <span className="text-[10px] font-medium text-neutral-400 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-sm">{patient.gender}</span>
               </div>
               <div className="flex items-center gap-3 mt-0.5 text-xs text-neutral-500 dark:text-neutral-300">
                 <span>{patient.age}y</span>
-                <span className="w-1 h-1 rounded-full bg-neutral-300 dark:bg-neutral-600" />
+                <span className="w-1 h-1 rounded-sm bg-neutral-300 dark:bg-neutral-600" />
                 <span>BMI {patient.bmi}</span>
-                <span className="w-1 h-1 rounded-full bg-neutral-300 dark:bg-neutral-600" />
+                <span className="w-1 h-1 rounded-sm bg-neutral-300 dark:bg-neutral-600" />
                 <span>Mallampati {patient.mallampati_score}</span>
-                <span className="w-1 h-1 rounded-full bg-neutral-300 dark:bg-neutral-600" />
+                <span className="w-1 h-1 rounded-sm bg-neutral-300 dark:bg-neutral-600" />
                 <span>TMD {patient.tmd}cm</span>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
   const difficultCount = predictions.filter((p) => p.prediction.toLowerCase() === 'difficult').length;
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950">
+    <div className="min-h-screen bg-[#F5F1DC] dark:bg-[#121212]">
       <Sidebar />
 
       <div className="lg:pl-64 transition-all duration-300">
@@ -166,7 +166,7 @@ export default function DashboardPage() {
             <div className="flex items-center gap-3">
               <div className="lg:hidden w-10" />
               <div className="flex items-center gap-2.5">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-soft">
+                <div className="h-8 w-8 rounded-lg bg-black flex items-center justify-center shadow-soft">
                   <Activity className="h-4 w-4 text-white" />
                 </div>
                 <div>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
                 <LogOut className="h-4 w-4" />
                 <span>Sign Out</span>
               </button>
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white text-sm font-semibold shadow-soft">
+              <div className="h-8 w-8 rounded-sm bg-black flex items-center justify-center text-white text-sm font-semibold shadow-soft">
                 {user.username.charAt(0).toUpperCase()}
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function DashboardPage() {
           {/* Error banner */}
           {error && (
             <div className="p-3 bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 rounded-xl flex items-start gap-2.5 animate-fade-in">
-              <div className="h-4 w-4 rounded-full bg-danger-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="h-4 w-4 rounded-sm bg-danger-500 text-black flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-[10px] font-bold">!</span>
               </div>
               <div className="flex-1">
@@ -256,7 +256,7 @@ export default function DashboardPage() {
             ) : (
               <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-700 shadow-card p-8 flex items-center justify-center h-full">
                 <div className="text-center">
-                  <div className="h-20 w-20 rounded-full bg-neutral-50 dark:bg-neutral-800 border-2 border-dashed border-neutral-200 dark:border-neutral-600 flex items-center justify-center mx-auto mb-4">
+                  <div className="h-20 w-20 rounded-sm bg-neutral-50 dark:bg-neutral-800 border-2 border-dashed border-neutral-200 dark:border-neutral-600 flex items-center justify-center mx-auto mb-4">
                     <span className="text-3xl font-bold text-neutral-300 dark:text-neutral-500">?</span>
                   </div>
                   <p className="text-sm text-neutral-400 dark:text-neutral-300 font-medium">No risk score yet</p>

@@ -85,7 +85,7 @@ export default function AboutPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+    <div className="min-h-screen bg-[#F5F1DC] dark:bg-[#121212]">
       <Sidebar />
 
       <div className="lg:pl-64 transition-all duration-300">
@@ -106,7 +106,7 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+            <div className="h-8 w-8 rounded-sm bg-black flex items-center justify-center text-white text-sm font-semibold shadow-sm">
               {user.username.charAt(0).toUpperCase()}
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function AboutPage() {
                     <h3 className="text-sm font-bold text-gray-800 dark:text-neutral-50">
                       {model.name}
                     </h3>
-                    <span className="text-[10px] font-medium text-gray-400 dark:text-neutral-300 uppercase tracking-wider bg-gray-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-medium text-gray-400 dark:text-neutral-300 uppercase tracking-wider bg-gray-100 dark:bg-neutral-800 px-2 py-0.5 rounded-sm">
                       {model.type.split(' ')[0]}
                     </span>
                   </div>

@@ -62,17 +62,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F1DC] p-4">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-brand-100/40 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-brand-200/30 blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-lg bg-brand-300" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-lg bg-[#FF00D9]/25" />
       </div>
 
       <div className="relative w-full max-w-md">
         {/* Brand header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 shadow-lg shadow-brand-300/40 mb-4">
+          <div className="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-black shadow-[5px_5px_0_#111] mb-4">
             <Stethoscope className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-gray-800">Airway MD</h1>
@@ -174,15 +174,15 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className={clsx(
-                'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-smooth shadow-sm',
+                'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-black border-2 border-black transition-smooth shadow-[4px_4px_0_#111]',
                 loading
-                  ? 'bg-brand-300 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 hover:shadow-md active:scale-[0.98]'
+                  ? 'bg-neutral-200 cursor-not-allowed'
+                  : 'bg-brand-500 hover:bg-brand-400 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#111] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none'
               )}
             >
               {loading && (
                 <svg
-                  className="animate-spin h-4 w-4 text-white"
+                  className="animate-spin h-4 w-4 text-black"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"

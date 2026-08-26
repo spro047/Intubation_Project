@@ -33,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${jetbrains.variable}`}>
-      <body className="min-h-screen bg-neutral-50 dark:bg-neutral-950 font-body antialiased">
+      <body className="min-h-screen bg-[#F5F1DC] dark:bg-[#121212] font-body antialiased">
         {children}
       </body>
     </html>

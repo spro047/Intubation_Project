@@ -52,7 +52,7 @@ export default function ReportsPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+    <div className="min-h-screen bg-[#F5F1DC] dark:bg-[#121212]">
       <Sidebar />
       <div className="lg:pl-64 transition-all duration-300">
         <header className="bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-700 shadow-sm">
@@ -70,7 +70,7 @@ export default function ReportsPage() {
         <main className="p-4 sm:p-6 lg:p-8 space-y-4">
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="animate-spin h-8 w-8 border-4 border-neutral-600 border-t-transparent rounded-full" />
+              <div className="animate-spin h-8 w-8 border-4 border-neutral-600 border-t-transparent rounded-sm" />
             </div>
           ) : predictions.length === 0 ? (
             <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-neutral-600 p-10 text-center">
@@ -107,7 +107,7 @@ export default function ReportsPage() {
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-gray-800 dark:text-neutral-50">{pred.patient_id}</span>
                           <span className={clsx(
-                            'text-[10px] font-semibold px-2 py-0.5 rounded-full',
+                            'text-[10px] font-semibold px-2 py-0.5 rounded-sm',
                             pred.prediction === 'Easy' ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
                             pred.prediction === 'Moderate' ? 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
                             'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400'
@@ -164,7 +164,7 @@ export default function ReportsPage() {
                       {/* LLM Report */}
                       {loadingReport === pred.id ? (
                         <div className="flex items-center gap-2 py-4 text-sm text-gray-400">
-                          <div className="animate-spin h-4 w-4 border-2 border-neutral-600 border-t-transparent rounded-full" />
+                          <div className="animate-spin h-4 w-4 border-2 border-neutral-600 border-t-transparent rounded-sm" />
                           Loading AI report...
                         </div>
                       ) : report ? (

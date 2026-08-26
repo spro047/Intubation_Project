@@ -36,7 +36,7 @@ export default function SettingsPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+    <div className="min-h-screen bg-[#F5F1DC] dark:bg-[#121212]">
       <Sidebar />
       <div className="lg:pl-64 transition-all duration-300">
         <header className="bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-700 shadow-sm">
@@ -85,14 +85,14 @@ export default function SettingsPage() {
                 <button
                   onClick={toggleDark}
                   className={clsx(
-                    'relative h-7 w-12 rounded-full transition-smooth border',
+                    'relative h-7 w-12 rounded-sm transition-smooth border',
                     dark
                       ? 'bg-neutral-600 border-neutral-500'
                       : 'bg-gray-200 dark:bg-neutral-700 border-gray-300 dark:border-neutral-600'
                   )}
                 >
                   <span className={clsx(
-                    'absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform border border-gray-200 dark:border-neutral-600',
+                    'absolute top-0.5 h-6 w-6 rounded-sm bg-white shadow-sm transition-transform border border-gray-200 dark:border-neutral-600',
                     dark ? 'translate-x-5.5' : 'translate-x-0.5'
                   )} />
                 </button>

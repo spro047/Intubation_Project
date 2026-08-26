@@ -47,7 +47,7 @@ export default function HistoryPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+    <div className="min-h-screen bg-[#F5F1DC] dark:bg-[#121212]">
       <Sidebar />
 
       <div className="lg:pl-64 transition-all duration-300">
@@ -75,7 +75,7 @@ export default function HistoryPage() {
                 </div>
               </div>
             </div>
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-500 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+            <div className="h-8 w-8 rounded-sm bg-black flex items-center justify-center text-white text-sm font-semibold shadow-sm">
               {user.username.charAt(0).toUpperCase()}
             </div>
           </div>
