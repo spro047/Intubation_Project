@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator, BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LayoutDashboard, History, FileText, Settings as SettingsIcon, Stethoscope } from 'lucide-react-native';
 
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/theme/ThemeProvider';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 
 import LoginScreen from '@/screens/auth/LoginScreen';
 import DashboardScreen from '@/screens/home/DashboardScreen';
@@ -58,8 +60,15 @@ const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
 
 function HomeStack() {
+  const reduceMotion = useReduceMotion();
   return (
-    <HomeStackNav.Navigator screenOptions={{ headerShown: false }}>
+    <HomeStackNav.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: reduceMotion ? 'fade' : 'slide_from_right',
+        animationDuration: reduceMotion ? 0 : 240,
+      }}
+    >
       <HomeStackNav.Screen name="Dashboard" component={DashboardScreen} />
       <HomeStackNav.Screen name="Assessment" component={AssessmentScreen} />
       <HomeStackNav.Screen name="PredictionResult" component={PredictionResultScreen} />
@@ -69,8 +78,15 @@ function HomeStack() {
 }
 
 function HistoryStack() {
+  const reduceMotion = useReduceMotion();
   return (
-    <HistoryStackNav.Navigator screenOptions={{ headerShown: false }}>
+    <HistoryStackNav.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: reduceMotion ? 'fade' : 'slide_from_right',
+        animationDuration: reduceMotion ? 0 : 240,
+      }}
+    >
       <HistoryStackNav.Screen name="History" component={HistoryScreen} />
       <HistoryStackNav.Screen name="ReportDetail" component={ReportDetailScreen} />
     </HistoryStackNav.Navigator>
@@ -78,8 +94,15 @@ function HistoryStack() {
 }
 
 function ReportsStack() {
+  const reduceMotion = useReduceMotion();
   return (
-    <ReportsStackNav.Navigator screenOptions={{ headerShown: false }}>
+    <ReportsStackNav.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: reduceMotion ? 'fade' : 'slide_from_right',
+        animationDuration: reduceMotion ? 0 : 240,
+      }}
+    >
       <ReportsStackNav.Screen name="Reports" component={ReportsScreen} />
       <ReportsStackNav.Screen name="ReportDetail" component={ReportDetailScreen} />
     </ReportsStackNav.Navigator>
@@ -87,56 +110,131 @@ function ReportsStack() {
 }
 
 function SettingsStack() {
+  const reduceMotion = useReduceMotion();
   return (
-    <SettingsStackNav.Navigator screenOptions={{ headerShown: false }}>
+    <SettingsStackNav.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: reduceMotion ? 'fade' : 'slide_from_right',
+        animationDuration: reduceMotion ? 0 : 240,
+      }}
+    >
       <SettingsStackNav.Screen name="Settings" component={SettingsScreen} />
       <SettingsStackNav.Screen name="About" component={AboutScreen} />
     </SettingsStackNav.Navigator>
   );
 }
 
-function MainTabs() {
+const TAB_ICONS: Record<string, any> = {
+  Home: LayoutDashboard,
+  Records: History,
+  Reports: FileText,
+  Settings: SettingsIcon,
+};
+
+function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { c, isDark } = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const barBg = isDark ? '#FFFFFF' : '#111111';
+  const activeIconColor = isDark ? '#FFFFFF' : '#111111';
+  const inactiveIconColor = isDark ? '#111111' : '#FFFFFF';
+  const activeIndicatorBg = isDark ? '#111111' : '#FFFFFF';
+  const inactiveIndicatorBg = isDark ? 'rgba(0,0,0,0.14)' : 'rgba(255,255,255,0.14)';
+
+  return (
+    <View
+      style={[
+        styles.homebarWrap,
+        {
+          paddingBottom: Math.max(insets.bottom, 8),
+          paddingLeft: 16,
+          paddingRight: 16,
+          paddingTop: 8,
+        },
+      ]}
+      pointerEvents="box-none"
+    >
+      <View
+        style={[
+          styles.homebar,
+          {
+            backgroundColor: barBg,
+            height: 62,
+            borderRadius: 31,
+            shadowColor: '#000000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.18,
+            shadowRadius: 12,
+            elevation: 6,
+          },
+        ]}
+      >
+        {state.routes.map((route, index) => {
+          const isFocused = state.index === index;
+          const Icon = TAB_ICONS[route.name] ?? LayoutDashboard;
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name);
+            }
+          };
+
+          const onLongPress = () => {
+            navigation.emit({ type: 'tabLongPress', target: route.key });
+          };
+
+          return (
+            <Pressable
+              key={route.key}
+              accessibilityRole="tab"
+              accessibilityState={isFocused ? { selected: true } : {}}
+              accessibilityLabel={descriptors[route.key].options.title ?? route.name}
+              onPress={onPress}
+              onLongPress={onLongPress}
+              style={styles.homebarSlot}
+              hitSlop={6}
+            >
+              <View
+                style={[
+                  styles.homebarIndicator,
+                  isFocused ? { backgroundColor: activeIndicatorBg } : { backgroundColor: inactiveIndicatorBg },
+                ]}
+              >
+                <Icon
+                  size={22}
+                  color={isFocused ? activeIconColor : inactiveIconColor}
+                  strokeWidth={isFocused ? 2.5 : 2}
+                />
+              </View>
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+function MainTabs() {
+  const { c } = useTheme();
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#111111',
-        tabBarInactiveTintColor: c.neutral[400],
         tabBarStyle: {
-          backgroundColor: c.card,
-          borderTopWidth: 2,
-          borderTopColor: isDark ? c.neutral[600] : '#111111',
-          height: 60,
-          paddingBottom: 6,
-          paddingTop: 6,
+          position: 'absolute',
+          backgroundColor: 'transparent',
+          borderTopWidth: 0,
+          elevation: 0,
         },
-        tabBarLabelStyle: {
-          fontFamily: 'Inter_600SemiBold',
-          fontSize: 10,
-        },
-        tabBarIcon: ({ color, focused }) => {
-          let Icon: any = LayoutDashboard;
-          if (route.name === 'Home') Icon = LayoutDashboard;
-          else if (route.name === 'Records') Icon = History;
-          else if (route.name === 'Reports') Icon = FileText;
-          else if (route.name === 'Settings') Icon = SettingsIcon;
-          return (
-            <View
-              style={{
-                paddingHorizontal: 12,
-                paddingVertical: 3,
-                borderRadius: 6,
-                borderWidth: focused ? 2 : 0,
-                borderColor: isDark ? c.neutral[600] : '#111111',
-                backgroundColor: focused ? c.brand[500] : 'transparent',
-              }}
-            >
-              <Icon size={20} color={focused ? '#111111' : color} strokeWidth={focused ? 2.5 : 2} />
-            </View>
-          );
-        },
-      })}
+        sceneStyle: { backgroundColor: c.page },
+      }}
+      tabBar={(props) => <FloatingTabBar {...props} />}
     >
       <Tab.Screen name="Home" component={HomeStack} options={{ title: 'Home' }} />
       <Tab.Screen name="Records" component={HistoryStack} options={{ title: 'Records' }} />
@@ -207,6 +305,33 @@ export default function AppNavigator() {
 const styles = StyleSheet.create({
   loading: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  homebarWrap: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+  },
+  homebar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingHorizontal: 6,
+  },
+  homebarSlot: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 48,
+    minWidth: 48,
+  },
+  homebarIndicator: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },

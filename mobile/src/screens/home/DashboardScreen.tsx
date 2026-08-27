@@ -7,13 +7,16 @@ import {
   Pressable,
   StyleSheet,
   ActivityIndicator,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Activity, Sun, Moon, Plus, Clock, AlertCircle } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
 import { useAuth } from '@/context/AuthContext';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { getPredictions, checkLlmStatus } from '@/lib/api';
+import { iconSizes } from '@/theme/tokens';
 import type { PredictionHistory, LlmStatus } from '@/types';
 import AppButton from '@/components/ui/AppButton';
 import Card from '@/components/ui/Card';
@@ -32,11 +35,25 @@ export default function DashboardScreen() {
   const { c, isDark, toggleTheme } = useTheme();
   const { user } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+  const reduceMotion = useReduceMotion();
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
 
   const [predictions, setPredictions] = useState<PredictionHistory[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [llmStatus, setLlmStatus] = useState<LlmState>('checking');
+
+  React.useEffect(() => {
+    if (reduceMotion) {
+      fadeAnim.setValue(1);
+      return;
+    }
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 350,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim, reduceMotion]);
 
   const fetchPredictions = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -72,18 +89,28 @@ export default function DashboardScreen() {
       <View style={[styles.header, { backgroundColor: c.card, borderBottomColor: c.border }]}>
         <View style={styles.headerLeft}>
           <View style={styles.headerLogo}>
-            <Activity size={16} color="#FFFFFF" />
+            <Activity size={iconSizes.md} color="#FFFFFF" />
           </View>
           <View>
             <Text style={[styles.headerTitle, { color: c.text }]}>Airway Assessment</Text>
-            <Text style={[styles.headerSub, { color: c.textFaint }]}>
+            <Text style={[styles.headerSub, { color: c.textMuted }]}>
               {user?.role ?? ''} · {user?.username ?? ''}
             </Text>
           </View>
         </View>
         <View style={styles.headerRight}>
           {/* LLM status dot */}
-          <View style={styles.llmStatus} accessibilityLabel="LLM status">
+          <View
+            style={styles.llmStatus}
+            accessibilityRole="image"
+            accessibilityLabel={
+              llmStatus === 'connected'
+                ? 'AI assistant connected'
+                : llmStatus === 'offline'
+                ? 'AI assistant offline'
+                : 'Checking AI assistant'
+            }
+          >
             {llmStatus === 'checking' ? (
               <ActivityIndicator size={10} color={c.neutral[400]} />
             ) : (
@@ -103,7 +130,7 @@ export default function DashboardScreen() {
             onPress={toggleTheme}
             style={[
               styles.themeBtn,
-              { backgroundColor: c.card, borderColor: isDark ? c.neutral[600] : '#111111' },
+              { backgroundColor: c.card, borderColor: isDark ? c.neutral[600] : c.ink },
             ]}
             accessibilityRole="button"
             accessibilityLabel={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -113,30 +140,31 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.content}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => fetchPredictions(true)} />
-        }
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Stats */}
-        <StatsCard
-          easy={easyCount}
-          moderate={moderateCount}
-          difficult={difficultCount}
-          total={predictions.length}
-        />
-
-        {/* Primary CTA */}
-        <Card style={styles.ctaCard}>
-          <AppButton
-            title="New Assessment"
-            onPress={() => navigation.navigate('Assessment')}
-            icon={<Plus size={16} color="#111111" />}
+      <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={() => fetchPredictions(true)} />
+          }
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Stats */}
+          <StatsCard
+            easy={easyCount}
+            moderate={moderateCount}
+            difficult={difficultCount}
+            total={predictions.length}
           />
-          <Text style={[styles.ctaSub, { color: c.textFaint }]}>
-            Enter patient data to predict airway difficulty
+
+          {/* Primary CTA */}
+          <Card style={styles.ctaCard}>
+            <AppButton
+              title="New Assessment"
+              onPress={() => navigation.navigate('Assessment')}
+              icon={<Plus size={16} color="#111111" />}
+            />
+            <Text style={[styles.ctaSub, { color: c.textFaint }]}>
+              Enter patient data to predict airway difficulty
           </Text>
         </Card>
 
@@ -153,6 +181,7 @@ export default function DashboardScreen() {
           <MiniHistory predictions={predictions} />
         )}
       </ScrollView>
+      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -216,6 +245,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 16,
+    paddingBottom: 120,
   },
   ctaCard: {
     alignItems: 'stretch',

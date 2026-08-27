@@ -56,6 +56,7 @@ export default function AppButton({
     borderRadius: radii.xl,
     paddingVertical: small ? 8 : 12,
     paddingHorizontal: small ? 12 : 16,
+    minHeight: small ? 44 : 48,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

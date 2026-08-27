@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Sparkles, Stethoscope, Lightbulb, AlertTriangle, Loader2 } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
 import { urgencyFor, radii } from '@/theme/tokens';
 import { parseBullets } from '@/utils/parseBullets';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import Skeleton from '@/components/ui/Skeleton';
+
+const LOADING_TIPS = [
+  'Analyzing airway risk factors…',
+  'Correlating clinical findings…',
+  'Preparing recommendations…',
+  'Reviewing patient profile…',
+  'Finalizing clinical guidance…',
+];
 
 interface AiClinicalAssessmentProps {
   summary: string;
@@ -25,6 +34,16 @@ export default function AiClinicalAssessment({
   sources,
 }: AiClinicalAssessmentProps) {
   const { c } = useTheme();
+  const reduceMotion = useReduceMotion();
+  const [tipIndex, setTipIndex] = useState(0);
+
+  useEffect(() => {
+    if (!loading || reduceMotion) return;
+    const interval = setInterval(() => {
+      setTipIndex((i) => (i + 1) % LOADING_TIPS.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [loading, reduceMotion]);
 
   if (loading) {
     return (
@@ -37,9 +56,14 @@ export default function AiClinicalAssessment({
             ]}
           >
             <Loader2 size={16} color={c.warning[600]} />
-            <Text style={[styles.slowText, { color: c.warning[700] }]}>
-              The LLM response is taking longer than usual. Please wait…
-            </Text>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.slowText, { color: c.warning[700] }]}>
+                The LLM response is taking longer than usual. Please wait…
+              </Text>
+              <Text style={[styles.slowTip, { color: c.warning[600] }]}>
+                {LOADING_TIPS[tipIndex]}
+              </Text>
+            </View>
           </View>
         ) : null}
         <View style={styles.skeletonHeader}>
@@ -294,6 +318,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     flex: 1,
     fontFamily: 'Inter_500Medium',
+  },
+  slowTip: {
+    fontSize: 11,
+    marginTop: 3,
+    fontFamily: 'Inter_400Regular',
   },
   body: {
     padding: 16,

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Brain, Cpu, Database, Layers, Sparkles } from 'lucide-react-native';
@@ -58,6 +58,14 @@ const layerColors = [
   { bg: '#E7FBFB', fg: '#0D8388' },
 ];
 
+const layerColorsDark = [
+  { bg: 'rgba(196,166,0,0.16)', fg: '#FFDE52' },
+  { bg: 'rgba(22,194,200,0.16)', fg: '#5ED4D9' },
+  { bg: 'rgba(196,166,0,0.16)', fg: '#FFDE52' },
+  { bg: 'rgba(234,179,8,0.16)', fg: '#fcd34d' },
+  { bg: 'rgba(22,194,200,0.16)', fg: '#5ED4D9' },
+];
+
 function SectionHeader({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle: string }) {
   const { c } = useTheme();
   return (
@@ -72,10 +80,10 @@ function SectionHeader({ icon, title, subtitle }: { icon: React.ReactNode; title
 }
 
 export default function AboutScreen() {
-  const { c } = useTheme();
+  const { c, isDark } = useTheme();
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: c.page }}>
+    <SafeAreaView edges={['bottom']} style={{ flex: 1, backgroundColor: c.page }}>
       <AppHeader title="About" subtitle="System architecture & model information" />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -161,7 +169,8 @@ export default function AboutScreen() {
         <View style={[styles.archCard, { backgroundColor: c.card, borderColor: c.border }]}>
           {architecture.map((layer, i) => {
             const Icon = layer.icon;
-            const lc = layerColors[i % layerColors.length];
+            const palette = isDark ? layerColorsDark : layerColors;
+const lc = palette[i % palette.length];
             return (
               <View
                 key={layer.layer}
@@ -190,7 +199,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 12,
-    paddingBottom: 40,
+    paddingBottom: 120,
   },
   sectionHead: {
     flexDirection: 'row',

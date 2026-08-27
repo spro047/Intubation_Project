@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+﻿import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import Constants from 'expo-constants';
 import { Settings as SettingsIcon, User, Moon, Sun, Globe, Database, Cpu, Shield, LogOut } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
 import { useAuth } from '@/context/AuthContext';
 import { checkLlmStatus, checkHealth, getBaseUrl, setBaseUrlOverride } from '@/lib/api';
 import { setApiBaseUrl } from '@/lib/storage';
 import type { LlmStatus } from '@/types';
-import AppHeader from '@/components/ui/AppHeader';
 import AppButton from '@/components/ui/AppButton';
 import AppInput from '@/components/ui/AppInput';
 import Banner from '@/components/ui/Banner';
@@ -52,6 +52,7 @@ export default function SettingsScreen() {
   const { c, isDark, toggleTheme } = useTheme();
   const { user, signOut } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
+  const appVersion = Constants.expoConfig?.version ?? '1.0.0';
 
   const [apiUrl, setApiUrl] = useState('');
   const [testing, setTesting] = useState(false);
@@ -88,11 +89,18 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: c.page }}>
-      <AppHeader
-        title="Settings"
-        subtitle={`${user?.role ?? ''} · ${user?.username ?? ''}`}
-        showBack={false}
-      />
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: c.card, borderBottomColor: c.border }]}>
+        <View style={[styles.headerIcon, { backgroundColor: c.neutral[100] }]}>
+          <SettingsIcon size={16} color={c.neutral[500]} />
+        </View>
+        <View>
+          <Text style={[styles.headerTitle, { color: c.text }]}>Settings</Text>
+          <Text style={[styles.headerSub, { color: c.textFaint }]}>
+            {user?.role ?? ''} Â· {user?.username ?? ''}
+          </Text>
+        </View>
+      </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Profile */}
@@ -180,7 +188,7 @@ export default function SettingsScreen() {
               <Banner variant="success">Connected</Banner>
             ) : connStatus === 'fail' ? (
               <Banner variant="danger">
-                Connection failed — check the URL and that the backend is running
+                Connection failed â€” check the URL and that the backend is running
               </Banner>
             ) : null}
             <Text style={[styles.rowSub, { color: c.textFaint }]}>
@@ -205,7 +213,7 @@ export default function SettingsScreen() {
             <SettingRow
               icon={<Cpu size={14} color={c.neutral[400]} />}
               label="LLM Model"
-              value={llmStatus?.model ?? '—'}
+              value={llmStatus?.model ?? 'â€”'}
             />
             <SettingRow
               icon={<Shield size={14} color={c.neutral[400]} />}
@@ -217,7 +225,7 @@ export default function SettingsScreen() {
 
         {/* About link */}
         <AppButton
-          title="About — Models & Architecture"
+          title="About â€” Models & Architecture"
           variant="secondary"
           onPress={() => navigation.navigate('About')}
           icon={<SettingsIcon size={16} color={c.neutral[700]} />}
@@ -230,16 +238,50 @@ export default function SettingsScreen() {
           onPress={() => signOut()}
           icon={<LogOut size={16} color="#111111" />}
         />
+
+        <Text style={[styles.versionText, { color: c.textFaint }]}>Airway MD Â· v{appVersion}</Text>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+  },
+  headerIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
+  },
+  headerSub: {
+    fontSize: 11,
+    textTransform: 'capitalize',
+    fontFamily: 'Inter_400Regular',
+  },
   content: {
     padding: 16,
     gap: 16,
-    paddingBottom: 40,
+    paddingBottom: 120,
+  },
+  versionText: {
+    fontSize: 10,
+    fontFamily: 'JetBrainsMono_400Regular',
+    textAlign: 'center',
+    letterSpacing: 0.5,
+    marginTop: 4,
   },
   card: {
     borderWidth: 1,

@@ -79,6 +79,7 @@ export const shadows = {
   card: { offset: { width: 5, height: 5 }, color: '#111111', radius: 0, opacity: 1 },
   elevated: { offset: { width: 6, height: 6 }, color: '#111111', radius: 0, opacity: 1 },
   pressed: { offset: { width: 2, height: 2 }, color: '#111111', radius: 0, opacity: 1 },
+  glow: { offset: { width: 0, height: 4 }, color: '#000000', radius: 12, opacity: 0.18 },
   none: undefined,
 };
 
@@ -92,6 +93,32 @@ export const spacing = {
   xl: 20,
   '2xl': 24,
   '3xl': 32,
+};
+
+export const iconSizes = {
+  xs: 12,
+  sm: 14,
+  md: 16,
+  lg: 20,
+  xl: 24,
+  '2xl': 32,
+};
+
+export const motion = {
+  fast: 150,
+  base: 250,
+  slow: 400,
+  spring: { tension: 300, friction: 24 },
+};
+
+export const EASING_STANDARD = [0.32, 0.72, 0, 1] as const;
+export const EASING_EMPHASIZED = [0.22, 0.8, 0.36, 1] as const;
+
+// Shared duration per distance tier (pro-rules: one timing per tier, not one for everything)
+export const motionTiers = {
+  micro: { duration: 120, easing: EASING_STANDARD },
+  standard: { duration: 240, easing: EASING_STANDARD },
+  emphasis: { duration: 380, easing: EASING_EMPHASIZED },
 };
 
 // Semantic class mapping — matches web RiskPredictionCard / badges

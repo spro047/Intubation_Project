@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '@/theme/ThemeProvider';
 import { classStyleFor, radii } from '@/theme/tokens';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 
 const RADIUS = 52;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -26,16 +27,38 @@ export default function RiskPredictionCard({
   probabilities,
 }: RiskPredictionCardProps) {
   const { c, isDark } = useTheme();
+  const { width } = useWindowDimensions();
+  const reduceMotion = useReduceMotion();
   const cs = classStyleFor(prediction);
 
   const score = Math.min(100, Math.max(0, riskScore * 100));
   const progress = (score / 100) * ARC_LENGTH;
 
+  const gaugeSize = Math.min(224, width - 56);
+  const glowSize = gaugeSize * 0.7;
+
   // Sweep the gauge arc in on first mount
   const anim = useRef(new Animated.Value(0)).current;
   const [mounted, setMounted] = useState(false);
+  const scoreAnim = useRef(new Animated.Value(0)).current;
+  const [displayScore, setDisplayScore] = useState(score);
 
   useEffect(() => {
+    if (reduceMotion) {
+      setDisplayScore(score);
+      return;
+    }
+    const listener = scoreAnim.addListener(({ value }) => {
+      setDisplayScore(Math.round(value));
+    });
+    return () => scoreAnim.removeListener(listener);
+  }, [scoreAnim, reduceMotion, score]);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setMounted(true);
+      return;
+    }
     const raf = requestAnimationFrame(() => setMounted(true));
     Animated.timing(anim, {
       toValue: 1,
@@ -43,8 +66,14 @@ export default function RiskPredictionCard({
       easing: Easing.bezier(0.32, 0.72, 0, 1),
       useNativeDriver: false,
     }).start();
+    Animated.timing(scoreAnim, {
+      toValue: score,
+      duration: 1000,
+      easing: Easing.bezier(0.32, 0.72, 0, 1),
+      useNativeDriver: false,
+    }).start();
     return () => cancelAnimationFrame(raf);
-  }, [anim]);
+  }, [anim, scoreAnim, score, reduceMotion]);
 
   // strokeDashoffset: start fully hidden, end at ARC_LENGTH - progress
   const dashOffset = anim.interpolate({
@@ -85,38 +114,57 @@ export default function RiskPredictionCard({
 
       {/* Radial gauge */}
       <View style={styles.gaugeWrap}>
-        <View style={[styles.gaugeGlow, { backgroundColor: cs.accent }]} />
-        <Svg viewBox="0 0 120 120" style={styles.gauge}>
-          {/* Track */}
-          <Circle
-            cx="60"
-            cy="60"
-            r={RADIUS}
-            fill="none"
-            strokeWidth="11"
-            stroke={isDark ? c.neutral[800] : c.neutral[100]}
-            strokeDasharray={`${ARC_LENGTH} ${CIRCUMFERENCE}`}
-            strokeLinecap="round"
-            transform="rotate(135 60 60)"
+        <View style={{ width: gaugeSize, height: gaugeSize }}>
+          <View
+            style={[
+              styles.gaugeGlow,
+              {
+                backgroundColor: cs.accent,
+                width: glowSize,
+                height: glowSize,
+                top: (gaugeSize - glowSize) / 2,
+                left: (gaugeSize - glowSize) / 2,
+                borderRadius: glowSize / 2,
+                shadowColor: cs.accent,
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.45,
+                shadowRadius: glowSize * 0.22,
+                elevation: glowSize * 0.1,
+              },
+            ]}
           />
-          {/* Progress arc (animated via strokeDashoffset) */}
-          <AnimatedCircle
-            cx="60"
-            cy="60"
-            r={RADIUS}
-            fill="none"
-            strokeWidth="11"
-            stroke={gaugeStroke}
-            strokeDasharray={`${ARC_LENGTH} ${CIRCUMFERENCE}`}
-            strokeDashoffset={mounted ? dashOffset : ARC_LENGTH}
-            strokeLinecap="round"
-            transform="rotate(135 60 60)"
-          />
-        </Svg>
-        {/* Center readout */}
-        <View style={styles.center}>
-          <Text style={[styles.bigNumber, { color: c.text }]}>{score.toFixed(0)}</Text>
-          <Text style={[styles.riskLabel, { color: c.textFaint }]}>% Risk</Text>
+          <Svg viewBox="0 0 120 120" style={styles.gauge}>
+            {/* Track */}
+            <Circle
+              cx="60"
+              cy="60"
+              r={RADIUS}
+              fill="none"
+              strokeWidth="11"
+              stroke={isDark ? c.neutral[800] : c.neutral[100]}
+              strokeDasharray={`${ARC_LENGTH} ${CIRCUMFERENCE}`}
+              strokeLinecap="round"
+              transform="rotate(135 60 60)"
+            />
+            {/* Progress arc (animated via strokeDashoffset) */}
+            <AnimatedCircle
+              cx="60"
+              cy="60"
+              r={RADIUS}
+              fill="none"
+              strokeWidth="11"
+              stroke={gaugeStroke}
+              strokeDasharray={`${ARC_LENGTH} ${CIRCUMFERENCE}`}
+              strokeDashoffset={mounted ? dashOffset : ARC_LENGTH}
+              strokeLinecap="round"
+              transform="rotate(135 60 60)"
+            />
+          </Svg>
+          {/* Center readout */}
+          <View style={styles.center}>
+            <Text style={[styles.bigNumber, { color: c.text }]}>{displayScore}</Text>
+            <Text style={[styles.riskLabel, { color: c.textFaint }]}>% Risk</Text>
+          </View>
         </View>
       </View>
 
@@ -220,15 +268,11 @@ const styles = StyleSheet.create({
   },
   gaugeGlow: {
     position: 'absolute',
-    width: 160,
-    height: 160,
-    borderRadius: 8,
-    opacity: 0.1,
-    top: 26,
+    opacity: 0.12,
   },
   gauge: {
-    width: 224,
-    height: 224,
+    width: '100%',
+    height: '100%',
   },
   center: {
     position: 'absolute',

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+﻿import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Alert,
   StyleSheet,
   ActivityIndicator,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -25,8 +26,10 @@ import {
 } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
 import { useAuth } from '@/context/AuthContext';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { getPredictions, deletePrediction, exportCsv } from '@/lib/api';
 import { cachePredictions, getCachedPredictions } from '@/lib/storage';
+import { iconSizes } from '@/theme/tokens';
 import type { PredictionHistory as PredictionHistoryType } from '@/types';
 import Badge from '@/components/ui/Badge';
 import AppInput from '@/components/ui/AppInput';
@@ -40,11 +43,13 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type FilterKey = 'all' | 'easy' | 'moderate' | 'difficult';
 
-// Port of web src/app/history/page.tsx + src/components/PatientHistory.tsx (table → card list)
+// Port of web src/app/history/page.tsx + src/components/PatientHistory.tsx (table â†’ card list)
 export default function HistoryScreen() {
   const { c } = useTheme();
   const { user } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<HistoryStackParamList>>();
+  const reduceMotion = useReduceMotion();
+  const entrance = useRef(new Animated.Value(0)).current;
 
   const [predictions, setPredictions] = useState<PredictionHistoryType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +60,18 @@ export default function HistoryScreen() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState('');
   const [offline, setOffline] = useState(false);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      entrance.setValue(1);
+      return;
+    }
+    Animated.timing(entrance, {
+      toValue: 1,
+      duration: 350,
+      useNativeDriver: true,
+    }).start();
+  }, [entrance, reduceMotion]);
 
   const fetchData = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -180,16 +197,17 @@ export default function HistoryScreen() {
         ) : null}
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.content}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => fetchData(true)} />
-        }
-        showsVerticalScrollIndicator={false}
-      >
+      <Animated.View style={{ flex: 1, opacity: entrance }}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={() => fetchData(true)} />
+          }
+          showsVerticalScrollIndicator={false}
+        >
         {offline ? (
           <Banner variant="warning" icon={<AlertCircle size={16} color={c.warning[600]} />}>
-            Offline — showing cached data
+            Offline â€” showing cached data
           </Banner>
         ) : null}
         {actionError ? (
@@ -244,6 +262,8 @@ export default function HistoryScreen() {
               subtitle={
                 searchTerm ? 'Try a different patient ID' : 'Run an assessment to see results'
               }
+              actionLabel={searchTerm ? undefined : 'Go to Dashboard'}
+              onAction={searchTerm ? undefined : () => navigation.getParent()?.navigate('Home')}
             />
           </View>
         ) : (
@@ -301,7 +321,8 @@ export default function HistoryScreen() {
             ))}
           </View>
         )}
-      </ScrollView>
+        </ScrollView>
+      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -340,7 +361,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 12,
-    paddingBottom: 40,
+    paddingBottom: 120,
   },
   searchWrap: {
     position: 'relative',

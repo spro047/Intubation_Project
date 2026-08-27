@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+﻿import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,11 @@ import {
   Pressable,
   StyleSheet,
   ActivityIndicator,
+  Animated,
+  useWindowDimensions,
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   User,
   Stethoscope,
@@ -59,12 +62,19 @@ const MALLAMPATI = [
   { label: 'Class IV', value: '4' },
 ];
 
-// Port of web src/components/PatientForm.tsx + dashboard handleSubmit (PatientForm section tabs → wizard steps)
+// Port of web src/components/PatientForm.tsx + dashboard handleSubmit (PatientForm section tabs â†’ wizard steps)
 export default function AssessmentScreen() {
   const { c } = useTheme();
   const { user } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const route = useRoute<RouteProp<HomeStackParamList, 'Assessment'>>();
+  const { width } = useWindowDimensions();
+  const stepFade = React.useRef(new Animated.Value(1)).current;
+
+  // Responsive form grid: 2 columns when there is enough width, 1 column on narrow screens
+  const canFitTwoColumns = width >= 380;
+  const fieldWidth = canFitTwoColumns ? '48%' : '100%';
+  const fieldThirdWidth = canFitTwoColumns ? '30%' : '100%';
 
   const [formData, setFormData] = useState<PredictionInput>({
     ...defaultFormData,
@@ -76,6 +86,24 @@ export default function AssessmentScreen() {
   const [predicting, setPredicting] = useState(false);
   const [predictingSlow, setPredictingSlow] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  const transitionStep = useCallback(
+    (next: number) => {
+      Animated.timing(stepFade, {
+        toValue: 0,
+        duration: 120,
+        useNativeDriver: true,
+      }).start(() => {
+        setStep(next);
+        Animated.timing(stepFade, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      });
+    },
+    [stepFade],
+  );
 
   // Restore draft on mount
   useEffect(() => {
@@ -113,11 +141,11 @@ export default function AssessmentScreen() {
     const errs = validateStep(step, formData);
     setErrors(errs);
     if (Object.keys(errs).length === 0) {
-      setStep((s) => Math.min(4, s + 1));
+      transitionStep(Math.min(4, step + 1));
     }
   };
 
-  const goBack = () => setStep((s) => Math.max(1, s - 1));
+  const goBack = () => transitionStep(Math.max(1, step - 1));
 
   const handleSubmit = async () => {
     const errs = validateAll(formData);
@@ -163,7 +191,7 @@ export default function AssessmentScreen() {
           neck_circumference: numericData.neck_circumference,
         });
       } catch (err: any) {
-        // Duplicate patient (409) → continue to prediction (safer UX)
+        // Duplicate patient (409) â†’ continue to prediction (safer UX)
         if (!(err?.status === 409 || String(err?.message ?? '').toLowerCase().includes('already exists'))) {
           throw err;
         }
@@ -192,10 +220,11 @@ export default function AssessmentScreen() {
     errors[field] ? { borderColor: c.danger[300] } : { borderColor: c.ink };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: c.page }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: c.page }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
@@ -204,13 +233,13 @@ export default function AssessmentScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <View style={styles.headerIcon}>
+            <View style={[styles.headerIcon, { backgroundColor: c.brand[50] }]}>
               <Activity size={16} color={c.brand[600]} />
             </View>
             <View>
               <Text style={[styles.headerTitle, { color: c.text }]}>Patient Entry</Text>
               <Text style={[styles.headerSub, { color: c.textFaint }]}>
-                {user?.role ?? ''} · {user?.username ?? ''}
+                {user?.role ?? ''} Â· {user?.username ?? ''}
               </Text>
             </View>
           </View>
@@ -229,7 +258,11 @@ export default function AssessmentScreen() {
               <Pressable
                 key={f.key}
                 onPress={() => loadFixture(f.data)}
-                style={[styles.fixtureBtn, { backgroundColor: tint.bg, borderColor: tint.border }]}
+                style={({ pressed }) => [
+                  styles.fixtureBtn,
+                  { backgroundColor: tint.bg, borderColor: tint.border },
+                  pressed && { opacity: 0.7 },
+                ]}
               >
                 <FlaskConical size={11} color={tint.text} />
                 <Text style={[styles.fixtureText, { color: tint.text }]}>{f.label}</Text>
@@ -238,9 +271,10 @@ export default function AssessmentScreen() {
           })}
           <Pressable
             onPress={() => loadFixture(generateRandomData())}
-            style={[
+            style={({ pressed }) => [
               styles.fixtureBtn,
               { backgroundColor: c.neutral[50], borderColor: c.neutral[200] },
+              pressed && { opacity: 0.7 },
             ]}
           >
             <Shuffle size={11} color={c.neutral[600]} />
@@ -273,6 +307,7 @@ export default function AssessmentScreen() {
               >
                 <Icon size={14} color={isActive ? c.brand[700] : c.textMuted} />
                 <Text
+                  numberOfLines={1}
                   style={[
                     styles.stepLabel,
                     { color: isActive ? c.brand[700] : c.textMuted },
@@ -286,7 +321,9 @@ export default function AssessmentScreen() {
         </View>
 
         {/* Form card */}
-        <View style={[styles.formCard, { backgroundColor: c.card, borderColor: c.border }]}>
+        <Animated.View
+          style={[styles.formCard, { backgroundColor: c.card, borderColor: c.border, opacity: stepFade }]}
+        >
           {/* STEP 1: Basic */}
           {step === 1 && (
             <View style={{ gap: 4 }}>
@@ -306,7 +343,7 @@ export default function AssessmentScreen() {
                   value={formData.age ? String(formData.age) : ''}
                   onChangeText={(t) => handleChange('age', t)}
                   error={errors.age}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={{ width: fieldThirdWidth }}
                 />
                 <Select
                   label="Gender"
@@ -318,7 +355,7 @@ export default function AssessmentScreen() {
                   ]}
                   onChange={(v) => handleChange('gender', String(v))}
                   error={errors.gender}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={{ width: fieldThirdWidth }}
                 />
                 <AppInput
                   label="BMI"
@@ -327,7 +364,7 @@ export default function AssessmentScreen() {
                   value={formData.bmi ? String(formData.bmi) : ''}
                   onChangeText={(t) => handleChange('bmi', t)}
                   error={errors.bmi}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={{ width: fieldThirdWidth }}
                 />
               </View>
             </View>
@@ -353,7 +390,7 @@ export default function AssessmentScreen() {
                   value={formData.tmd ? String(formData.tmd) : ''}
                   onChangeText={(t) => handleChange('tmd', t)}
                   error={errors.tmd}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={{ width: fieldWidth }}
                 />
                 <AppInput
                   label="SMD (cm)"
@@ -362,7 +399,7 @@ export default function AssessmentScreen() {
                   value={formData.smd !== undefined ? String(formData.smd) : ''}
                   onChangeText={(t) => handleChange('smd', t)}
                   error={errors.smd}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={{ width: fieldWidth }}
                 />
               </View>
             </View>
@@ -379,7 +416,7 @@ export default function AssessmentScreen() {
                   value={formData.neck_circumference ? String(formData.neck_circumference) : ''}
                   onChangeText={(t) => handleChange('neck_circumference', t)}
                   error={errors.neck_circumference}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={{ width: fieldWidth }}
                 />
                 <AppInput
                   label="Mouth (mm)"
@@ -388,11 +425,11 @@ export default function AssessmentScreen() {
                   value={formData.mouth_opening !== undefined ? String(formData.mouth_opening) : ''}
                   onChangeText={(t) => handleChange('mouth_opening', t)}
                   error={errors.mouth_opening}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={{ width: fieldWidth }}
                 />
               </View>
               <AppInput
-                label="Neck Movement (°)"
+                label="Neck Movement (Â°)"
                 keyboardType="numeric"
                 placeholder="85"
                 value={formData.neck_movement !== undefined ? String(formData.neck_movement) : ''}
@@ -422,7 +459,7 @@ export default function AssessmentScreen() {
                     value={formData.beard ?? 'No'}
                     options={YES_NO}
                     onChange={(v) => handleChange('beard', String(v))}
-                    containerStyle={{ flex: 1 }}
+                    containerStyle={{ width: fieldWidth }}
                   />
                   <Select
                     label="Chest"
@@ -433,7 +470,7 @@ export default function AssessmentScreen() {
                       { label: 'Large', value: 'Large' },
                     ]}
                     onChange={(v) => handleChange('chest_size', String(v))}
-                    containerStyle={{ flex: 1 }}
+                    containerStyle={{ width: fieldWidth }}
                   />
                   <Select
                     label="Neck"
@@ -443,7 +480,7 @@ export default function AssessmentScreen() {
                       { label: 'Abnormal', value: 'Abnormal' },
                     ]}
                     onChange={(v) => handleChange('neck_structure', String(v))}
-                    containerStyle={{ flex: 1 }}
+                    containerStyle={{ width: fieldWidth }}
                   />
                   <Select
                     label="Jaw"
@@ -453,7 +490,7 @@ export default function AssessmentScreen() {
                       { label: 'Reduced', value: 'Reduced' },
                     ]}
                     onChange={(v) => handleChange('jaw_movement', String(v))}
-                    containerStyle={{ flex: 1 }}
+                    containerStyle={{ width: fieldWidth }}
                   />
                   <Select
                     label="Tissue"
@@ -463,7 +500,7 @@ export default function AssessmentScreen() {
                       { label: 'Reduced', value: 'Reduced' },
                     ]}
                     onChange={(v) => handleChange('tissue_flexibility', String(v))}
-                    containerStyle={{ flex: 1 }}
+                    containerStyle={{ width: fieldWidth }}
                   />
                 </View>
               )}
@@ -493,7 +530,7 @@ export default function AssessmentScreen() {
                   value={String(formData[field] ?? 'No')}
                   options={YES_NO}
                   onChange={(v) => handleChange(field, String(v))}
-                  containerStyle={{ flex: 1 }}
+                  containerStyle={{ width: fieldWidth }}
                 />
               ))}
             </View>
@@ -522,18 +559,22 @@ export default function AssessmentScreen() {
                 variant="secondary"
                 onPress={goBack}
                 disabled={predicting}
-                style={{ flex: 1 }}
+                style={canFitTwoColumns ? { flex: 1 } : { width: '100%' }}
               />
             ) : null}
             {step < 4 ? (
-              <AppButton title="Next" onPress={goNext} style={{ flex: 1 }} />
+              <AppButton
+                title="Next"
+                onPress={goNext}
+                style={canFitTwoColumns ? { flex: 1 } : { width: '100%' }}
+              />
             ) : (
               <AppButton
                 title={predicting ? 'Assessing...' : 'Assess Patient'}
                 onPress={handleSubmit}
                 loading={predicting}
                 icon={!predicting ? <Activity size={16} color="#111111" /> : undefined}
-                style={{ flex: 1 }}
+                style={canFitTwoColumns ? { flex: 1 } : { width: '100%' }}
               />
             )}
           </View>
@@ -542,20 +583,21 @@ export default function AssessmentScreen() {
             <View style={[styles.slowNote, { backgroundColor: c.warning[50], borderColor: c.ink }]}>
               <ActivityIndicator size="small" color={c.warning[600]} />
               <Text style={[styles.slowNoteText, { color: c.warning[700] }]}>
-                The LLM response is taking longer than usual. Please wait…
+                The LLM response is taking longer than usual. Please waitâ€¦
               </Text>
             </View>
           ) : null}
-        </View>
+        </Animated.View>
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   content: {
     padding: 16,
-    paddingBottom: 40,
+    paddingBottom: 120,
     gap: 14,
   },
   header: {
@@ -572,7 +614,6 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 8,
-    backgroundColor: '#FFFBEA',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -617,14 +658,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 5,
+    gap: 4,
     paddingVertical: 7,
+    paddingHorizontal: 2,
     borderRadius: radii.sm,
+    minWidth: 0,
   },
   stepLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
     fontFamily: 'Inter_600SemiBold',
+    flexShrink: 1,
   },
   formCard: {
     borderWidth: 1,
@@ -634,6 +678,7 @@ const styles = StyleSheet.create({
   },
   grid3: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
   },
   grid2: {
@@ -669,6 +714,7 @@ const styles = StyleSheet.create({
   },
   navRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
     marginTop: 16,
   },

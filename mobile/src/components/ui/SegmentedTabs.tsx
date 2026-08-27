@@ -70,7 +70,7 @@ export default function SegmentedTabs({
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: '600',
                 fontFamily: 'Inter_600SemiBold',
                 color: isActive ? c.brand[700] : c.textMuted,
@@ -112,8 +112,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 7,
-    paddingHorizontal: 4,
-    gap: 4,
+    paddingHorizontal: 3,
+    gap: 3,
+    minWidth: 0,
   },
   count: {
     minWidth: 18,

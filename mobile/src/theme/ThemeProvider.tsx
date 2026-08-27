@@ -77,7 +77,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       border: isDark ? colors.border.dark : colors.border.light,
       text: isDark ? '#FAFAFA' : '#111111',
       textMuted: isDark ? colors.neutral[300] : colors.neutral[600],
-      textFaint: isDark ? colors.neutral[400] : colors.neutral[400],
+      textFaint: isDark ? colors.neutral[400] : colors.neutral[500],
     };
   }, [theme]);
 

@@ -117,9 +117,19 @@ async function apiFetch<T>(
     throw new ApiError(errorMessage, response.status);
   }
 
+  // 204 No Content (e.g. DELETE) has an empty body — never parse it
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
   const contentType = response.headers.get('content-type');
   if (contentType && contentType.includes('application/json')) {
-    return (await response.json()) as T;
+    const text = await response.text();
+    try {
+      return (text ? JSON.parse(text) : undefined) as T;
+    } catch {
+      return undefined as T;
+    }
   }
 
   return (await response.text()) as unknown as T;

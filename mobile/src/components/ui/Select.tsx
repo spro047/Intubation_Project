@@ -49,6 +49,7 @@ export default function Select({
         onPress={() => setOpen(true)}
         style={[
           {
+            width: '100%',
             backgroundColor: c.card,
             borderWidth: 2,
             borderColor,
@@ -64,7 +65,6 @@ export default function Select({
             shadowRadius: 0,
             elevation: 4,
           },
-          containerStyle,
         ]}
         accessibilityRole="button"
         accessibilityLabel={label ?? 'Select'}

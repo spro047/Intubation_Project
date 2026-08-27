@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Animated, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '@/theme/ThemeProvider';
 import { radii } from '@/theme/tokens';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 
 interface SkeletonProps {
   width?: number | `${number}%`;
@@ -13,9 +14,11 @@ interface SkeletonProps {
 // Shimmer-ish skeleton (opacity pulse) matching web `skeleton` classes
 export default function Skeleton({ width = '100%', height = 14, radius, style }: SkeletonProps) {
   const { c } = useTheme();
-  const opacity = useRef(new Animated.Value(0.4)).current;
+  const reduceMotion = useReduceMotion();
+  const opacity = useRef(new Animated.Value(reduceMotion ? 1 : 0.4)).current;
 
   useEffect(() => {
+    if (reduceMotion) return;
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(opacity, { toValue: 1, duration: 700, useNativeDriver: true }),
@@ -24,7 +27,7 @@ export default function Skeleton({ width = '100%', height = 14, radius, style }:
     );
     loop.start();
     return () => loop.stop();
-  }, [opacity]);
+  }, [opacity, reduceMotion]);
 
   return (
     <Animated.View
@@ -34,7 +37,7 @@ export default function Skeleton({ width = '100%', height = 14, radius, style }:
           height,
           borderRadius: radius ?? radii.sm,
           backgroundColor: c.neutral[200],
-          opacity,
+          opacity: reduceMotion ? 1 : opacity,
         },
         style,
       ]}

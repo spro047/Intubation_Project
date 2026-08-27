@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, Text, ScrollView, RefreshControl, Pressable, StyleSheet } from 'react-native';
+﻿import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View, Text, ScrollView, RefreshControl, Pressable, StyleSheet, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { format, parseISO } from 'date-fns';
 import { FileText, Clock, Stethoscope, ChevronRight, Loader2 } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
 import { useAuth } from '@/context/AuthContext';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { getPredictions, getPredictionReport } from '@/lib/api';
 import type { PredictionHistory, LLMReport } from '@/types';
 import { classStyleFor, radii } from '@/theme/tokens';
@@ -21,12 +22,26 @@ export default function ReportsScreen() {
   const { c, isDark } = useTheme();
   const { user } = useAuth();
   const navigation = useNavigation<NativeStackNavigationProp<ReportsStackParamList>>();
+  const reduceMotion = useReduceMotion();
+  const entrance = useRef(new Animated.Value(0)).current;
 
   const [predictions, setPredictions] = useState<PredictionHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [reports, setReports] = useState<Record<string, LLMReport>>({});
   const [loadingReport, setLoadingReport] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      entrance.setValue(1);
+      return;
+    }
+    Animated.timing(entrance, {
+      toValue: 1,
+      duration: 350,
+      useNativeDriver: true,
+    }).start();
+  }, [entrance, reduceMotion]);
 
   const fetchPredictions = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -70,28 +85,29 @@ export default function ReportsScreen() {
     }
   };
 
-  return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: c.page }}>
-      {/* Header */}
-      <View style={[styles.header, { backgroundColor: c.card, borderBottomColor: c.border }]}>
-        <View style={[styles.headerIcon, { backgroundColor: c.neutral[100] }]}>
-          <FileText size={16} color={c.neutral[500]} />
-        </View>
-        <View>
-          <Text style={[styles.headerTitle, { color: c.text }]}>Clinical Reports</Text>
-          <Text style={[styles.headerSub, { color: c.textFaint }]}>
-            {user?.role ?? ''} · {user?.username ?? ''}
-          </Text>
-        </View>
-      </View>
+return (
+<SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: c.page }}>
+{/* Header */}
+<View style={[styles.header, { backgroundColor: c.card, borderBottomColor: c.border }]}>
+<View style={[styles.headerIcon, { backgroundColor: c.neutral[100] }]}>
+<FileText size={16} color={c.neutral[500]} />
+</View>
+<View>
+<Text style={[styles.headerTitle, { color: c.text }]}>Clinical Reports</Text>
+<Text style={[styles.headerSub, { color: c.textFaint }]}>
+{user?.role ?? ''} Â· {user?.username ?? ''}
+</Text>
+</View>
+</View>
 
-      <ScrollView
-        contentContainerStyle={styles.content}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => fetchPredictions(true)} />
-        }
-        showsVerticalScrollIndicator={false}
-      >
+<Animated.View style={{ flex: 1, opacity: entrance }}>
+<ScrollView
+contentContainerStyle={styles.content}
+refreshControl={
+<RefreshControl refreshing={refreshing} onRefresh={() => fetchPredictions(true)} />
+}
+showsVerticalScrollIndicator={false}
+>
         {loading ? (
           <View style={[styles.listCard, { backgroundColor: c.card, borderColor: c.border }]}>
             <Skeleton width={140} height={16} style={{ marginBottom: 16 }} />
@@ -158,10 +174,11 @@ export default function ReportsScreen() {
               </Pressable>
             );
           })
-        )}
-      </ScrollView>
-    </SafeAreaView>
-  );
+)}
+</ScrollView>
+</Animated.View>
+</SafeAreaView>
+);
 }
 
 const styles = StyleSheet.create({
@@ -193,7 +210,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 12,
-    paddingBottom: 40,
+    paddingBottom: 120,
   },
   listCard: {
     borderWidth: 1,

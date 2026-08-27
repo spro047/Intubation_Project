@@ -11,10 +11,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
 import { Stethoscope, Eye, EyeOff, AlertCircle, LogIn, Settings as SettingsIcon } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
 import { useAuth } from '@/context/AuthContext';
-import { radii } from '@/theme/tokens';
+import { radii, iconSizes } from '@/theme/tokens';
 import { getBaseUrl, setBaseUrlOverride, checkHealth } from '@/lib/api';
 import { setApiBaseUrl } from '@/lib/storage';
 import AppButton from '@/components/ui/AppButton';
@@ -23,8 +24,9 @@ import Banner from '@/components/ui/Banner';
 
 // Port of web src/app/login/page.tsx + mobile server-address field
 export default function LoginScreen() {
-  const { c } = useTheme();
+  const { c, isDark } = useTheme();
   const { signIn } = useAuth();
+  const appVersion = Constants.expoConfig?.version ?? '1.0.0';
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -92,17 +94,22 @@ export default function LoginScreen() {
           {/* Decorative brand blocks */}
           <View pointerEvents="none" style={styles.decor}>
             <View style={[styles.decorYellow, { backgroundColor: c.brand[300] }]} />
-            <View style={[styles.decorMagenta, { backgroundColor: '#FF00D9' }]} />
+            <View
+              style={[
+                styles.decorMagenta,
+                { backgroundColor: isDark ? 'rgba(255,0,217,0.15)' : 'rgba(255,0,217,0.25)' },
+              ]}
+            />
           </View>
 
           <View style={styles.content}>
             {/* Brand header */}
             <View style={styles.brand}>
               <View style={styles.logo}>
-                <Stethoscope size={32} color="#FFFFFF" />
+                <Stethoscope size={iconSizes['2xl']} color="#FFFFFF" />
               </View>
-              <Text style={[styles.brandTitle, { color: c.neutral[800] }]}>Airway MD</Text>
-              <Text style={[styles.brandSub, { color: c.neutral[500] }]}>
+              <Text style={[styles.brandTitle, { color: c.text }]}>Airway MD</Text>
+              <Text style={[styles.brandSub, { color: c.textMuted }]}>
                 Clinical Assessment — Multimodal Airway Prediction
               </Text>
             </View>
@@ -113,8 +120,8 @@ export default function LoginScreen() {
                 styles.card,
                 {
                   backgroundColor: c.card,
-                  borderColor: c.neutral[100],
-                  shadowColor: '#111111',
+                  borderColor: c.border,
+                  shadowColor: isDark ? '#000000' : '#111111',
                 },
               ]}
             >
@@ -251,9 +258,12 @@ export default function LoginScreen() {
                 </View>
               ) : null}
 
-              <View style={[styles.footer, { borderTopColor: c.neutral[100] }]}>
+              <View style={[styles.footer, { borderTopColor: c.border }]}>
                 <Text style={[styles.footerText, { color: c.textFaint }]}>
                   Secure clinical assessment platform
+                </Text>
+                <Text style={[styles.versionText, { color: c.textFaint }]}>
+                  v{appVersion}
                 </Text>
               </View>
             </View>
@@ -391,10 +401,16 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     borderTopWidth: 1,
     alignItems: 'center',
+    gap: 6,
   },
   footerText: {
     fontSize: 12,
     fontFamily: 'Inter_400Regular',
+  },
+  versionText: {
+    fontSize: 10,
+    fontFamily: 'JetBrainsMono_400Regular',
+    letterSpacing: 0.5,
   },
   serverToggle: {
     flexDirection: 'row',

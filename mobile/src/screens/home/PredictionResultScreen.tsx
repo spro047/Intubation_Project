@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -23,7 +23,7 @@ export default function PredictionResultScreen() {
   const prediction = result?.prediction;
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: c.page }}>
+    <SafeAreaView edges={['bottom']} style={{ flex: 1, backgroundColor: c.page }}>
       <AppHeader
         title="Prediction Result"
         subtitle={input?.patient_id}
@@ -65,6 +65,6 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 16,
-    paddingBottom: 40,
+    paddingBottom: 120,
   },
 });

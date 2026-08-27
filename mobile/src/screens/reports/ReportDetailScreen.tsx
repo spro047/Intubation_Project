@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -13,6 +13,7 @@ import AppHeader from '@/components/ui/AppHeader';
 import Badge from '@/components/ui/Badge';
 import Banner from '@/components/ui/Banner';
 import Skeleton from '@/components/ui/Skeleton';
+import RiskPredictionCard from '@/components/result/RiskPredictionCard';
 import type { HistoryStackParamList } from '@/navigation';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -60,7 +61,7 @@ export default function ReportDetailScreen() {
   })();
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: c.page }}>
+    <SafeAreaView edges={['bottom']} style={{ flex: 1, backgroundColor: c.page }}>
       <AppHeader title={prediction.patient_id} subtitle={dateStr} />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -97,6 +98,14 @@ export default function ReportDetailScreen() {
             </View>
           </View>
         </View>
+
+        {/* Risk score speedometer */}
+        <RiskPredictionCard
+          riskScore={prediction.risk_score}
+          prediction={prediction.prediction}
+          confidence={prediction.confidence}
+          probabilities={prediction.probabilities}
+        />
 
         {loading ? (
           <View style={[styles.listCard, { backgroundColor: c.card, borderColor: c.border }]}>
@@ -223,7 +232,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 12,
-    paddingBottom: 40,
+    paddingBottom: 120,
   },
   summaryCard: {
     borderWidth: 1,
@@ -274,7 +283,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 3,
-    shadowColor: '#111111',
+    shadowColor: '#000000',
     shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 1,
     shadowRadius: 0,

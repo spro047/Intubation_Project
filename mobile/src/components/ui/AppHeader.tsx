@@ -40,13 +40,14 @@ export default function AppHeader({ title, subtitle, showBack = true, onBack, ri
                   borderColor: c.border,
                 },
               ]}
+              hitSlop={4}
               accessibilityRole="button"
               accessibilityLabel="Go back"
             >
               <ArrowLeft size={18} color={c.textMuted} />
             </Pressable>
           ) : (
-            <View style={{ width: 36 }} />
+            <View style={{ width: 44 }} />
           )}
           <View style={{ flexShrink: 1 }}>
             <Text numberOfLines={1} style={[styles.title, { color: c.text }]}>{title}</Text>
@@ -79,8 +80,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backBtn: {
-    width: 34,
-    height: 34,
+    width: 44,
+    height: 44,
     borderRadius: 8,
     borderWidth: 1,
     alignItems: 'center',
