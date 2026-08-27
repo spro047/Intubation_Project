@@ -31,3 +31,10 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# ponytail: dev-safe backstop — never sign JWTs with a publicly-known default secret.
+# If JWT_SECRET is unset (or still the placeholder), generate a random per-boot secret.
+if settings.jwt_secret in ("", "change-me-in-production"):
+    import secrets
+
+    settings.jwt_secret = secrets.token_urlsafe(32)

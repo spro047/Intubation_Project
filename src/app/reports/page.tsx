@@ -13,7 +13,7 @@ import clsx from 'clsx';
 
 export default function ReportsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ username: string; role: string } | null>(null);
+  const [user, setUser] = useState<{ email: string; role: string } | null>(null);
   const [predictions, setPredictions] = useState<PredictionHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -62,7 +62,7 @@ export default function ReportsPage() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-800 dark:text-neutral-50">Clinical Reports</h1>
-              <p className="text-xs text-gray-400 dark:text-neutral-400 capitalize">{user.role} · {user.username}</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-400 capitalize">{user.role} · {user.email}</p>
             </div>
           </div>
         </header>

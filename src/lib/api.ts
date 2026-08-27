@@ -15,6 +15,14 @@ function getToken(): string | null {
   return localStorage.getItem('access_token');
 }
 
+// FastAPI returns validation errors (422) as { detail: [{ msg, ... }] }; flatten to readable text.
+function formatApiError(body: any): string {
+  const d = body?.detail;
+  if (typeof d === 'string') return d;
+  if (Array.isArray(d)) return d.map((e: any) => e?.msg).filter(Boolean).join(', ');
+  return '';
+}
+
 function setToken(token: string): void {
   localStorage.setItem('access_token', token);
 }
@@ -24,7 +32,7 @@ function clearToken(): void {
   localStorage.removeItem('user');
 }
 
-function getUser(): { username: string; role: string } | null {
+function getUser(): { email: string; role: string } | null {
   if (typeof window === 'undefined') return null;
   const raw = localStorage.getItem('user');
   if (!raw) return null;
@@ -35,7 +43,7 @@ function getUser(): { username: string; role: string } | null {
   }
 }
 
-function setUser(user: { username: string; role: string }): void {
+function setUser(user: { email: string; role: string }): void {
   localStorage.setItem('user', JSON.stringify(user));
 }
 
@@ -62,11 +70,7 @@ async function apiFetch<T>(
     let errorMessage = `API Error: ${response.status} ${response.statusText}`;
     try {
       const errorBody = await response.json();
-      if (errorBody.detail) {
-        errorMessage = errorBody.detail;
-      } else if (errorBody.message) {
-        errorMessage = errorBody.message;
-      }
+      errorMessage = formatApiError(errorBody) || errorBody?.message || errorMessage;
     } catch {
       // ignore parse error
     }
@@ -82,7 +86,7 @@ async function apiFetch<T>(
 }
 
 export async function login(
-  username: string,
+  email: string,
   password: string
 ): Promise<AuthResponse> {
   const response = await fetch(`${BASE_URL}/api/auth/login`, {
@@ -90,14 +94,14 @@ export async function login(
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ email, password }),
   });
 
   if (!response.ok) {
     let errorMessage = 'Login failed';
     try {
       const errorBody = await response.json();
-      errorMessage = errorBody.detail || errorMessage;
+      errorMessage = formatApiError(errorBody) || errorMessage;
     } catch {
       errorMessage = `Login failed: ${response.statusText}`;
     }
@@ -108,6 +112,32 @@ export async function login(
   setToken(data.access_token);
   setUser(data.user);
   return data;
+}
+
+export async function register(
+  email: string,
+  password: string
+): Promise<{ message: string; email: string }> {
+  const response = await fetch(`${BASE_URL}/api/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    let errorMessage = 'Registration failed';
+    try {
+      const errorBody = await response.json();
+      errorMessage = formatApiError(errorBody) || errorMessage;
+    } catch {
+      errorMessage = `Registration failed: ${response.statusText}`;
+    }
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
 }
 
 export function logout(): void {

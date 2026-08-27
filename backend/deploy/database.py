@@ -23,5 +23,5 @@ async def ensure_indexes():
     db = get_db()
     await db.patients.create_index("patient_id", unique=True)
     await db.predictions.create_index([("patient_id", 1), ("created_at", -1)])
-    await db.users.create_index("username", unique=True)
+    await db.users.create_index("email", unique=True)
     await db.llm_reports.create_index([("prediction_id", 1)])

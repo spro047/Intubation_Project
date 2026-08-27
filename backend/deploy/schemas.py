@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import Optional, List
 from datetime import datetime
 from enum import Enum
@@ -11,13 +11,13 @@ class RoleEnum(str, Enum):
 
 
 class UserCreate(BaseModel):
-    username: str
-    password: str
+    email: EmailStr
+    password: str = Field(min_length=6, max_length=128)
     role: RoleEnum = RoleEnum.doctor
 
 
 class UserOut(BaseModel):
-    username: str
+    email: str
     role: str
 
     class Config:

@@ -12,7 +12,7 @@ import type { PredictionHistory as PredictionHistoryType } from '@/types';
 
 export default function HistoryPage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ username: string; role: string } | null>(
+  const [user, setUser] = useState<{ email: string; role: string } | null>(
     null
   );
   const [predictions, setPredictions] = useState<PredictionHistoryType[]>([]);
@@ -76,7 +76,7 @@ export default function HistoryPage() {
               </div>
             </div>
             <div className="h-8 w-8 rounded-sm bg-black flex items-center justify-center text-white text-sm font-semibold shadow-sm">
-              {user.username.charAt(0).toUpperCase()}
+              {user.email.charAt(0).toUpperCase()}
             </div>
           </div>
         </header>
