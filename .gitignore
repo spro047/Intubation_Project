@@ -39,3 +39,11 @@ logs/
 
 # Tool cache
 .understand-anything/
+
+# TypeScript build artifacts
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Agent workspace
+.omo/
+
