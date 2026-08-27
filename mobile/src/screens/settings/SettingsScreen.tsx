@@ -97,7 +97,7 @@ export default function SettingsScreen() {
         <View>
           <Text style={[styles.headerTitle, { color: c.text }]}>Settings</Text>
           <Text style={[styles.headerSub, { color: c.textFaint }]}>
-            {user?.role ?? ''} Â· {user?.username ?? ''}
+            {user?.role ?? ''} Â· {user?.email ?? ''}
           </Text>
         </View>
       </View>
@@ -110,7 +110,7 @@ export default function SettingsScreen() {
             <Text style={[styles.cardTitle, { color: c.text }]}>Profile</Text>
           </View>
           <View style={styles.cardBody}>
-            <SettingRow icon={<User size={14} color={c.neutral[400]} />} label="Username" value={user?.username ?? ''} />
+            <SettingRow icon={<User size={14} color={c.neutral[400]} />} label="Username" value={user?.email ?? ''} />
             <SettingRow
               icon={<Shield size={14} color={c.neutral[400]} />}
               label="Role"

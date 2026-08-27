@@ -94,7 +94,7 @@ export default function DashboardScreen() {
           <View>
             <Text style={[styles.headerTitle, { color: c.text }]}>Airway Assessment</Text>
             <Text style={[styles.headerSub, { color: c.textMuted }]}>
-              {user?.role ?? ''} · {user?.username ?? ''}
+              {user?.role ?? ''} · {user?.email ?? ''}
             </Text>
           </View>
         </View>

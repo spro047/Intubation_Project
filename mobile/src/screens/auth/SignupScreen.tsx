@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,52 +11,24 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Constants from 'expo-constants';
-import { Stethoscope, Eye, EyeOff, AlertCircle, LogIn, Settings as SettingsIcon } from 'lucide-react-native';
+import { Stethoscope, Eye, EyeOff, AlertCircle, UserPlus } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeProvider';
-import { useAuth } from '@/context/AuthContext';
 import { radii, iconSizes } from '@/theme/tokens';
-import { getBaseUrl, setBaseUrlOverride, checkHealth } from '@/lib/api';
-import { setApiBaseUrl } from '@/lib/storage';
 import AppButton from '@/components/ui/AppButton';
-import AppInput from '@/components/ui/AppInput';
 import Banner from '@/components/ui/Banner';
 
-// Port of web src/app/login/page.tsx + mobile server-address field
-export default function LoginScreen({ navigation }: { navigation: any }) {
+interface SignupScreenProps {
+  navigation: any;
+}
+
+export default function SignupScreen({ navigation }: SignupScreenProps) {
   const { c, isDark } = useTheme();
-  const { signIn } = useAuth();
-  const appVersion = Constants.expoConfig?.version ?? '1.0.0';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showServer, setShowServer] = useState(false);
-  const [serverUrl, setServerUrl] = useState('');
-  const [testingServer, setTestingServer] = useState(false);
-  const [serverStatus, setServerStatus] = useState<'idle' | 'ok' | 'fail'>('idle');
-
-  useEffect(() => {
-    setServerUrl(getBaseUrl());
-  }, []);
-
-  const handleTestServer = async () => {
-    const url = serverUrl.trim().replace(/\/+$/, '');
-    if (!url) return;
-    setApiBaseUrl(url);
-    setBaseUrlOverride(url);
-    setServerStatus('idle');
-    setTestingServer(true);
-    try {
-      await checkHealth();
-      setServerStatus('ok');
-    } catch {
-      setServerStatus('fail');
-    } finally {
-      setTestingServer(false);
-    }
-  };
 
   const handleSubmit = async () => {
     setError('');
@@ -72,12 +44,22 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
       setError('Password is required');
       return;
     }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     setLoading(true);
     try {
-      await signIn(email.trim(), password);
-      // RootNavigator auto-switches to MainTabs when token is set — no manual nav
+      const { register } = await import('@/lib/api');
+      await register(email, password);
+      navigation.navigate('Login');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+      setError(err instanceof Error ? err.message : 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -118,7 +100,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
               </Text>
             </View>
 
-            {/* Login card */}
+            {/* Signup card */}
             <View
               style={[
                 styles.card,
@@ -130,9 +112,9 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
               ]}
             >
               <View style={styles.cardHead}>
-                <Text style={[styles.cardTitle, { color: c.text }]}>Welcome Back</Text>
+                <Text style={[styles.cardTitle, { color: c.text }]}>Create Account</Text>
                 <Text style={[styles.cardSub, { color: c.textFaint }]}>
-                  Sign in to access the assessment dashboard
+                  Sign up to access the assessment dashboard
                 </Text>
               </View>
 
@@ -180,10 +162,10 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
                       setPassword(t);
                       if (error) setError('');
                     }}
-                    placeholder="Enter your password"
+                    placeholder="Create a password (min 6 characters)"
                     placeholderTextColor={c.neutral[400]}
                     secureTextEntry={!showPassword}
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     style={[
                       styles.inputInner,
                       {
@@ -207,6 +189,31 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
                 </View>
               </View>
 
+              {/* Confirm Password */}
+              <View style={styles.fieldGroup}>
+                <Text style={[styles.label, { color: c.textMuted }]}>Confirm Password</Text>
+                <TextInput
+                  value={confirmPassword}
+                  onChangeText={(t) => {
+                    setConfirmPassword(t);
+                    if (error) setError('');
+                  }}
+                  placeholder="Confirm your password"
+                  placeholderTextColor={c.neutral[400]}
+                  secureTextEntry={!showPassword}
+                  autoComplete="new-password"
+                  style={[
+                    styles.input,
+                    {
+                      backgroundColor: c.card,
+                      borderColor: inputBorderColor,
+                      color: c.text,
+                      fontFamily: 'Inter_400Regular',
+                    },
+                  ]}
+                />
+              </View>
+
               {/* Error */}
               {error ? (
                 <Banner variant="danger" icon={<AlertCircle size={16} color={c.danger[500]} />}>
@@ -214,70 +221,26 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
                 </Banner>
               ) : null}
 
-              {/* Submit */}
+              {/* Sign Up Button */}
               <AppButton
-                title={loading ? 'Signing In...' : 'Sign In'}
+                title={loading ? 'Creating Account...' : 'Sign Up'}
                 onPress={handleSubmit}
                 loading={loading}
-                icon={!loading ? <LogIn size={16} color="#111111" /> : undefined}
+                icon={!loading ? <UserPlus size={16} color="#111111" /> : undefined}
               />
 
-              {/* Sign Up Button */}
+              {/* Sign In Button */}
               <View style={{ marginTop: 12 }}>
                 <AppButton
-                  title="Sign Up"
+                  title="Sign In"
                   variant="secondary"
-                  onPress={() => navigation.navigate('Signup')}
+                  onPress={() => navigation.navigate('Login')}
                 />
               </View>
-
-              {/* Server address (mobile addition — lets you fix the API URL before login) */}
-              <Pressable
-                onPress={() => setShowServer((s) => !s)}
-                style={styles.serverToggle}
-              >
-                <SettingsIcon size={14} color={c.neutral[400]} />
-                <Text style={[styles.serverToggleText, { color: c.neutral[500] }]}>
-                  {showServer ? 'Hide server address' : 'Server address'}
-                </Text>
-              </Pressable>
-
-              {showServer ? (
-                <View style={styles.serverBox}>
-                  <AppInput
-                    label="API URL"
-                    value={serverUrl}
-                    onChangeText={setServerUrl}
-                    onEndEditing={handleTestServer}
-                    mono
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    placeholder="http://192.168.1.50:8000"
-                    containerStyle={{ marginBottom: 8 }}
-                  />
-                  <AppButton
-                    title={testingServer ? 'Testing...' : 'Test Connection'}
-                    variant="secondary"
-                    small
-                    onPress={handleTestServer}
-                    loading={testingServer}
-                  />
-                  {serverStatus === 'ok' ? (
-                    <Banner variant="success">Connected</Banner>
-                  ) : serverStatus === 'fail' ? (
-                    <Banner variant="danger">
-                      Connection failed — check the address and that the backend is running
-                    </Banner>
-                  ) : null}
-                </View>
-              ) : null}
 
               <View style={[styles.footer, { borderTopColor: c.border }]}>
                 <Text style={[styles.footerText, { color: c.textFaint }]}>
                   Secure clinical assessment platform
-                </Text>
-                <Text style={[styles.versionText, { color: c.textFaint }]}>
-                  v{appVersion}
                 </Text>
               </View>
             </View>
@@ -420,27 +383,5 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 12,
     fontFamily: 'Inter_400Regular',
-  },
-  versionText: {
-    fontSize: 10,
-    fontFamily: 'JetBrainsMono_400Regular',
-    letterSpacing: 0.5,
-  },
-  serverToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    marginTop: 16,
-    paddingVertical: 6,
-  },
-  serverToggleText: {
-    fontSize: 12,
-    fontWeight: '600',
-    fontFamily: 'Inter_600SemiBold',
-  },
-  serverBox: {
-    marginTop: 12,
-    gap: 8,
   },
 });

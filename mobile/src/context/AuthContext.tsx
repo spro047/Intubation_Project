@@ -7,7 +7,8 @@ interface AuthContextValue {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  signIn: (username: string, password: string) => Promise<User>;
+  signIn: (email: string, password: string) => Promise<User>;
+  signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   restoreSession: () => Promise<void>;
 }
@@ -49,13 +50,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const signIn = useCallback(async (username: string, password: string): Promise<User> => {
-    const data = await apiLogin(username, password);
+  const signIn = useCallback(async (email: string, password: string): Promise<User> => {
+    const data = await apiLogin(email, password);
     await setToken(data.access_token);
     await setUser(data.user);
     setTokenState(data.access_token);
     setUserState(data.user);
     return data.user;
+  }, []);
+
+  const signUp = useCallback(async (email: string, password: string): Promise<void> => {
+    const { register } = await import('@/lib/api');
+    await register(email, password);
   }, []);
 
   const signOut = useCallback(async () => {
@@ -70,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [restoreSession]);
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, signIn, signOut, restoreSession }}>
+    <AuthContext.Provider value={{ user, token, isLoading, signIn, signUp, signOut, restoreSession }}>
       {children}
     </AuthContext.Provider>
   );

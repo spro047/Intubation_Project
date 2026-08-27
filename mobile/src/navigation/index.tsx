@@ -12,6 +12,7 @@ import { useTheme } from '@/theme/ThemeProvider';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 
 import LoginScreen from '@/screens/auth/LoginScreen';
+import SignupScreen from '@/screens/auth/SignupScreen';
 import DashboardScreen from '@/screens/home/DashboardScreen';
 import AssessmentScreen from '@/screens/home/AssessmentScreen';
 import PredictionResultScreen from '@/screens/home/PredictionResultScreen';
@@ -284,7 +285,10 @@ function RootNavigator() {
       {token ? (
         <RootStack.Screen name="Main" component={MainTabs} />
       ) : (
-        <RootStack.Screen name="Login" component={LoginScreen} />
+        <>
+          <RootStack.Screen name="Login" component={LoginScreen} />
+          <RootStack.Screen name="Signup" component={SignupScreen} />
+        </>
       )}
     </RootStack.Navigator>
   );

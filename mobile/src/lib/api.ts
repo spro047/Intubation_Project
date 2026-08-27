@@ -73,6 +73,14 @@ export class ApiError extends Error {
   }
 }
 
+// FastAPI returns validation errors (422) as { detail: [{ msg, ... }] }; flatten to readable text.
+function formatApiError(body: any): string {
+  const d = body?.detail;
+  if (typeof d === 'string') return d;
+  if (Array.isArray(d)) return d.map((e: any) => e?.msg).filter(Boolean).join(', ');
+  return '';
+}
+
 async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
@@ -106,11 +114,7 @@ async function apiFetch<T>(
     let errorMessage = `API Error: ${response.status} ${response.statusText}`;
     try {
       const errorBody = await response.json();
-      if (errorBody.detail) {
-        errorMessage = errorBody.detail;
-      } else if (errorBody.message) {
-        errorMessage = errorBody.message;
-      }
+      errorMessage = formatApiError(errorBody) || errorBody?.message || errorMessage;
     } catch {
       // ignore parse error
     }
@@ -139,7 +143,7 @@ async function apiFetch<T>(
 
 const LOGIN_TIMEOUT_MS = 10000;
 
-export async function login(username: string, password: string): Promise<AuthResponse> {
+export async function login(email: string, password: string): Promise<AuthResponse> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), LOGIN_TIMEOUT_MS);
 
@@ -148,7 +152,7 @@ export async function login(username: string, password: string): Promise<AuthRes
     response = await fetch(`${getBaseUrl()}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
       signal: controller.signal,
     });
   } catch {
@@ -164,7 +168,7 @@ export async function login(username: string, password: string): Promise<AuthRes
     let errorMessage = 'Login failed';
     try {
       const errorBody = await response.json();
-      errorMessage = errorBody.detail || errorMessage;
+      errorMessage = formatApiError(errorBody) || errorMessage;
     } catch {
       errorMessage = `Login failed: ${response.statusText}`;
     }
@@ -176,6 +180,41 @@ export async function login(username: string, password: string): Promise<AuthRes
   await setToken(data.access_token);
   await setUser(data.user);
   return data;
+}
+
+export async function register(email: string, password: string): Promise<{ message: string; email: string }> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), LOGIN_TIMEOUT_MS);
+
+  let response: Response;
+  try {
+    response = await fetch(`${getBaseUrl()}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      signal: controller.signal,
+    });
+  } catch {
+    throw new ApiError(
+      `Cannot reach server at ${getBaseUrl()}. Check the server address and that the backend is running.`,
+      0,
+    );
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  if (!response.ok) {
+    let errorMessage = 'Registration failed';
+    try {
+      const errorBody = await response.json();
+      errorMessage = formatApiError(errorBody) || errorMessage;
+    } catch {
+      errorMessage = `Registration failed: ${response.statusText}`;
+    }
+    throw new ApiError(errorMessage, response.status);
+  }
+
+  return response.json();
 }
 
 export async function logout(): Promise<void> {

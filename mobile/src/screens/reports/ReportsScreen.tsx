@@ -95,7 +95,7 @@ return (
 <View>
 <Text style={[styles.headerTitle, { color: c.text }]}>Clinical Reports</Text>
 <Text style={[styles.headerSub, { color: c.textFaint }]}>
-{user?.role ?? ''} Â· {user?.username ?? ''}
+{user?.role ?? ''} Â· {user?.email ?? ''}
 </Text>
 </View>
 </View>
