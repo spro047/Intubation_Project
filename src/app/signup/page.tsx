@@ -1,40 +1,20 @@
 'use client';
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Stethoscope, Eye, EyeOff, AlertCircle, LogIn } from 'lucide-react';
+import { Stethoscope, Eye, EyeOff, AlertCircle, UserPlus } from 'lucide-react';
 import clsx from 'clsx';
-import { login, getToken, clearToken } from '@/lib/api';
-import { BASE_URL } from '@/lib/api';
+import { register } from '@/lib/api';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // Redirect only if token is valid; clear stale tokens
-  useEffect(() => {
-    const token = getToken();
-    if (!token) return;
-    (async () => {
-      try {
-        const res = await fetch(`${BASE_URL}/api/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (res.ok) {
-          router.replace('/dashboard');
-        } else {
-          clearToken();
-        }
-      } catch {
-        clearToken();
-      }
-    })();
-  }, [router]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -52,14 +32,22 @@ export default function LoginPage() {
       setError('Password is required');
       return;
     }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
 
     setLoading(true);
     try {
-      await login(email, password);
-      router.push('/dashboard');
+      await register(email, password);
+      router.push('/login?registered=true');
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'Login failed. Please try again.'
+        err instanceof Error ? err.message : 'Registration failed. Please try again.'
       );
     } finally {
       setLoading(false);
@@ -86,14 +74,14 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Login Card */}
+        {/* Signup Card */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-gray-800">
-              Welcome Back
+              Create Account
             </h2>
             <p className="text-sm text-gray-400 mt-1">
-              Sign in to access the assessment dashboard
+              Sign up to access the assessment dashboard
             </p>
           </div>
 
@@ -137,7 +125,7 @@ export default function LoginPage() {
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
+                  placeholder="Create a password (min 6 characters)"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
@@ -149,7 +137,7 @@ export default function LoginPage() {
                       ? 'border-danger-300 focus:ring-danger-200'
                     : 'border-gray-200 focus:ring-brand-300 focus:border-brand-400 hover:border-gray-300'
                   )}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
@@ -166,6 +154,33 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Confirm Password */}
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-600 mb-1.5"
+              >
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (error) setError('');
+                }}
+                className={clsx(
+                  'w-full px-4 py-2.5 text-sm border rounded-xl transition-smooth focus:outline-none focus:ring-2',
+                  error
+                    ? 'border-danger-300 focus:ring-danger-200'
+                    : 'border-gray-200 focus:ring-brand-300 focus:border-brand-400 hover:border-gray-300'
+                )}
+                autoComplete="new-password"
+              />
+            </div>
+
             {/* Error message */}
             {error && (
               <div className="p-3 bg-danger-50 border border-danger-200 rounded-xl flex items-start gap-2.5">
@@ -174,7 +189,7 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* Sign In Button */}
+            {/* Sign Up Button */}
             <button
               type="submit"
               disabled={loading}
@@ -207,16 +222,16 @@ export default function LoginPage() {
                   />
                 </svg>
               )}
-              {loading ? 'Signing In...' : 'Sign In'}
-              {!loading && <LogIn className="h-4 w-4" />}
+              {loading ? 'Creating Account...' : 'Sign Up'}
+              {!loading && <UserPlus className="h-4 w-4" />}
             </button>
 
-            {/* Sign Up Button */}
+            {/* Sign In Link */}
             <Link
-              href="/signup"
+              href="/login"
               className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-gray-700 border-2 border-gray-300 transition-smooth shadow-[4px_4px_0_#ccc] hover:bg-gray-100 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#ccc] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
             >
-              Sign Up
+              Sign In
             </Link>
           </form>
 

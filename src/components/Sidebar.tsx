@@ -115,10 +115,10 @@ export default function Sidebar() {
           {user && (
             <div className="flex items-center gap-3 px-3 py-2">
               <div className="h-8 w-8 rounded-sm bg-black flex items-center justify-center text-white text-sm font-semibold shadow-soft">
-                {user.username.charAt(0).toUpperCase()}
+                {user.email.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-700 dark:text-neutral-100 truncate">{user.username}</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-neutral-100 truncate">{user.email}</p>
                 <p className="text-xs text-gray-400 dark:text-neutral-400 capitalize">{user.role}</p>
               </div>
             </div>

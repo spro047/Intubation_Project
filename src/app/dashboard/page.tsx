@@ -21,7 +21,7 @@ import type { PredictionInput, PredictionResponse, PredictionHistory as Predicti
 export default function DashboardPage() {
   const router = useRouter();
   const formRef = useRef<HTMLDivElement>(null);
-  const [user, setUser] = useState<{ username: string; role: string } | null>(null);
+  const [user, setUser] = useState<{ email: string; role: string } | null>(null);
   const [predicting, setPredicting] = useState(false);
   const [predictionResult, setPredictionResult] = useState<PredictionResponse | null>(null);
   const [predictions, setPredictions] = useState<PredictionHistoryType[]>([]);
@@ -198,7 +198,7 @@ export default function DashboardPage() {
                     Airway Assessment
                   </h1>
                   <p className="text-xs text-neutral-400 dark:text-neutral-400 capitalize">
-                    {user.role} · {user.username}
+                    {user.role} · {user.email}
                   </p>
                 </div>
               </div>
@@ -235,7 +235,7 @@ export default function DashboardPage() {
                 <span>Sign Out</span>
               </button>
               <div className="h-8 w-8 rounded-sm bg-black flex items-center justify-center text-white text-sm font-semibold shadow-soft">
-                {user.username.charAt(0).toUpperCase()}
+                {user.email.charAt(0).toUpperCase()}
               </div>
             </div>
           </div>

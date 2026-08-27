@@ -13,7 +13,7 @@ import clsx from 'clsx';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ username: string; role: string } | null>(null);
+  const [user, setUser] = useState<{ email: string; role: string } | null>(null);
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-800 dark:text-neutral-50">Settings</h1>
-              <p className="text-xs text-gray-400 dark:text-neutral-400 capitalize">{user.role} · {user.username}</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-400 capitalize">{user.role} · {user.email}</p>
             </div>
           </div>
         </header>
@@ -61,7 +61,7 @@ export default function SettingsPage() {
             <div className="p-5 space-y-3">
               <div className="flex items-center justify-between py-2">
                 <span className="text-sm text-gray-500 dark:text-neutral-300">Username</span>
-                <span className="text-sm font-medium text-gray-800 dark:text-neutral-50">{user.username}</span>
+                <span className="text-sm font-medium text-gray-800 dark:text-neutral-50">{user.email}</span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <span className="text-sm text-gray-500 dark:text-neutral-300">Role</span>
